@@ -1,7 +1,6 @@
-
 # autogosling-flask
 
-A brief description of what this project does and who it's for
+This is the code repository for the flask backend of autogosling
 
 
 ## Authors
@@ -11,56 +10,39 @@ A brief description of what this project does and who it's for
 
 ## Features
 
-- Light/dark mode toggle
-- Live previews
-- Fullscreen mode
-- Cross platform
 
-
-## Installation
-
-Install my-project with npm
-
-```bash
-  npm install my-project
-  cd my-project
-```
     
 ## Run Locally
 
 Clone the project
 
 ```bash
-  git clone https://link-to-project
+  git clone https://github.com/autogosling/autogosling-flask
 ```
 
 Go to the project directory
 
 ```bash
-  cd my-project
+  cd autogosling-flask
 ```
 
-Install dependencies
+Create a conda environment using the following command:
 
 ```bash
-  npm install
+  conda env create -f myenv.yml
+  conda activate autogosling
 ```
 
-Start the server
+Run any file
 
 ```bash
-  npm run start
+  python main.py
 ```
 
 
 ## Roadmap
 
-- Additional browser support
-
-- Add more integrations
-
 
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
-
