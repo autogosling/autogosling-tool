@@ -14,23 +14,11 @@ This is the code repository for the flask backend of autogosling
     
 ## Run Locally
 
-Clone the project
-
-```bash
-  git clone https://github.com/autogosling/autogosling-flask
-```
 
 Go to the project directory
 
 ```bash
-  cd autogosling-flask
-```
-
-Create a conda environment using the following command:
-
-```bash
-  conda env create -f myenv.yml
-  conda activate autogosling
+  cd flask
 ```
 
 Run any file
