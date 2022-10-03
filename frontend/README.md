@@ -12,16 +12,10 @@ This is the code repository for the frontend of autogosling.
     
 ## Run Locally
 
-Clone the project
-
-```bash
-  git clone https://github.com/autogosling/autogosling-frontend
-```
-
 Go to the project directory
 
 ```bash
-  cd autogosling-frontend
+  cd frontend
 ```
 
 Download yarn (if not already installed)
