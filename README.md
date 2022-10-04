@@ -3,6 +3,15 @@
 This is the code repository for autogosling webtool, consisting of the flask backend, frontend and model.
 
 
+Note: if you add any packages to the conda environment: run (if you are on Mac or Linux)
+```bash
+conda env export | grep -v "^prefix: " > myenv.yml
+```
+If you are on Windows, run 
+```bash
+conda env export -f myenv.yml
+```
+and manually remove the "prefix:" line
 ## Authors
 
 - [@mnqng](https://www.github.com/mnqng)
