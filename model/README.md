@@ -8,6 +8,9 @@ This is the code repository for any modeling required for autogosling.
 
 - [@mnqng](https://www.github.com/mnqng)
 
+## Notes
+
+The test-spec.json comes from https://raw.githubusercontent.com/wangqianwen0418/gosling-boxes/info_extraction/scripts/specs.json?token=GHSAT0AAAAAABZQMOH3KDJ7HKXEXA7TJF3YYZ3SOWA 
 
 ## Features
 
@@ -26,6 +29,11 @@ Go to the project directory
 
 ```bash
   cd model
+```
+
+Download Yolo-v4 weights through the following command:
+```bash
+wget https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v3_optimal/yolov4.weights
 ```
 
 Run any file
