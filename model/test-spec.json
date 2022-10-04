@@ -1,0 +1,900 @@
+[
+    {
+        "id": "2c255ebd-2ac5-48d3-9390-a1fbe846b709",
+        "spec": {
+            "mark": "header",
+            "width": 600,
+            "height": 46,
+            "title": "Visual Encoding",
+            "subtitle": "Gosling provides diverse visual encoding methods",
+            "id": "2c255ebd-2ac5-48d3-9390-a1fbe846b709"
+        },
+        "shape": {
+            "cx": 300,
+            "cy": 23
+        }
+    },
+    {
+        "id": "track-1",
+        "spec": {
+            "assembly": "hg38",
+            "layout": "linear",
+            "orientation": "horizontal",
+            "static": false,
+            "zoomLimits": [
+                1,
+                null
+            ],
+            "xDomain": {
+                "chromosome": "1",
+                "interval": [
+                    1,
+                    3000500
+                ]
+            },
+            "centerRadius": 0.8,
+            "xOffset": 0,
+            "yOffset": 0,
+            "style": {},
+            "id": "track-1",
+            "data": {
+                "url": "https://server.gosling-lang.org/api/v1/tileset_info/?d=cistrome-multivec",
+                "type": "multivec",
+                "row": "sample",
+                "column": "position",
+                "value": "peak",
+                "categories": [
+                    "sample 1",
+                    "sample 2",
+                    "sample 3",
+                    "sample 4"
+                ],
+                "binSize": 4
+            },
+            "mark": "rect",
+            "x": {
+                "field": "start",
+                "type": "genomic",
+                "axis": "top",
+                "domain": {
+                    "chromosome": "1",
+                    "interval": [
+                        1,
+                        3000500
+                    ]
+                },
+                "linkingId": "0ae5db99-81e2-4cab-a520-efff55c089db"
+            },
+            "xe": {
+                "field": "end",
+                "type": "genomic"
+            },
+            "row": {
+                "field": "sample",
+                "type": "nominal",
+                "legend": true
+            },
+            "color": {
+                "field": "peak",
+                "type": "quantitative",
+                "legend": true
+            },
+            "tooltip": [
+                {
+                    "field": "start",
+                    "type": "genomic",
+                    "alt": "Start Position"
+                },
+                {
+                    "field": "end",
+                    "type": "genomic",
+                    "alt": "End Position"
+                },
+                {
+                    "field": "peak",
+                    "type": "quantitative",
+                    "alt": "Value",
+                    "format": ".2"
+                },
+                {
+                    "field": "sample",
+                    "type": "nominal",
+                    "alt": "Sample"
+                }
+            ],
+            "width": 600,
+            "height": 160,
+            "overlayOnPreviousTrack": false
+        },
+        "shape": {
+            "x": 0,
+            "y": 50,
+            "width": 600,
+            "height": 160
+        }
+    },
+    {
+        "id": "track-2",
+        "spec": {
+            "assembly": "hg38",
+            "layout": "linear",
+            "orientation": "horizontal",
+            "static": false,
+            "zoomLimits": [
+                1,
+                null
+            ],
+            "xDomain": {
+                "chromosome": "1",
+                "interval": [
+                    1,
+                    3000500
+                ]
+            },
+            "centerRadius": 0.8,
+            "xOffset": 0,
+            "yOffset": 0,
+            "style": {},
+            "id": "track-2",
+            "data": {
+                "url": "https://server.gosling-lang.org/api/v1/tileset_info/?d=cistrome-multivec",
+                "type": "multivec",
+                "row": "sample",
+                "column": "position",
+                "value": "peak",
+                "categories": [
+                    "sample 1",
+                    "sample 2",
+                    "sample 3",
+                    "sample 4"
+                ]
+            },
+            "mark": "bar",
+            "x": {
+                "field": "position",
+                "type": "genomic",
+                "axis": "top",
+                "domain": {
+                    "chromosome": "1",
+                    "interval": [
+                        1,
+                        3000500
+                    ]
+                },
+                "linkingId": "a318ea13-7e03-4bb7-a0a7-9854f4d7c561"
+            },
+            "y": {
+                "field": "peak",
+                "type": "quantitative"
+            },
+            "row": {
+                "field": "sample",
+                "type": "nominal"
+            },
+            "color": {
+                "field": "sample",
+                "type": "nominal",
+                "legend": true
+            },
+            "tooltip": [
+                {
+                    "field": "position",
+                    "type": "genomic",
+                    "alt": "Position"
+                },
+                {
+                    "field": "peak",
+                    "type": "quantitative",
+                    "alt": "Value",
+                    "format": ".2"
+                },
+                {
+                    "field": "sample",
+                    "type": "nominal",
+                    "alt": "Sample"
+                }
+            ],
+            "width": 600,
+            "height": 160,
+            "overlayOnPreviousTrack": false
+        },
+        "shape": {
+            "x": 0,
+            "y": 220,
+            "width": 600,
+            "height": 160
+        }
+    },
+    {
+        "id": "track-3",
+        "spec": {
+            "assembly": "hg38",
+            "layout": "linear",
+            "orientation": "horizontal",
+            "static": false,
+            "zoomLimits": [
+                1,
+                null
+            ],
+            "xDomain": {
+                "chromosome": "1",
+                "interval": [
+                    1,
+                    3000500
+                ]
+            },
+            "centerRadius": 0.8,
+            "xOffset": 0,
+            "yOffset": 0,
+            "style": {},
+            "id": "track-3",
+            "data": {
+                "url": "https://server.gosling-lang.org/api/v1/tileset_info/?d=cistrome-multivec",
+                "type": "multivec",
+                "row": "sample",
+                "column": "position",
+                "value": "peak",
+                "categories": [
+                    "sample 1",
+                    "sample 2",
+                    "sample 3",
+                    "sample 4"
+                ]
+            },
+            "mark": "bar",
+            "x": {
+                "field": "position",
+                "type": "genomic",
+                "axis": "top",
+                "domain": {
+                    "chromosome": "1",
+                    "interval": [
+                        1,
+                        3000500
+                    ]
+                },
+                "linkingId": "0dec69a3-46be-4c9d-a2a4-1f11ffbb2e1c"
+            },
+            "y": {
+                "field": "peak",
+                "type": "quantitative",
+                "grid": true
+            },
+            "color": {
+                "field": "sample",
+                "type": "nominal",
+                "legend": true
+            },
+            "tooltip": [
+                {
+                    "field": "position",
+                    "type": "genomic",
+                    "alt": "Position"
+                },
+                {
+                    "field": "peak",
+                    "type": "quantitative",
+                    "alt": "Value",
+                    "format": ".2"
+                },
+                {
+                    "field": "sample",
+                    "type": "nominal",
+                    "alt": "Sample"
+                }
+            ],
+            "width": 600,
+            "height": 160,
+            "overlayOnPreviousTrack": false
+        },
+        "shape": {
+            "x": 0,
+            "y": 390,
+            "width": 600,
+            "height": 160
+        }
+    },
+    {
+        "id": "track-4",
+        "spec": {
+            "id": "track-4",
+            "data": {
+                "url": "https://server.gosling-lang.org/api/v1/tileset_info/?d=cistrome-multivec",
+                "type": "multivec",
+                "row": "sample",
+                "column": "position",
+                "value": "peak",
+                "categories": [
+                    "sample 1",
+                    "sample 2",
+                    "sample 3",
+                    "sample 4"
+                ]
+            },
+            "x": {
+                "field": "position",
+                "type": "genomic",
+                "axis": "top",
+                "domain": {
+                    "chromosome": "1",
+                    "interval": [
+                        1,
+                        3000500
+                    ]
+                },
+                "linkingId": "14b610af-ba7c-46de-9c3b-57b08412542d"
+            },
+            "y": {
+                "field": "peak",
+                "type": "quantitative"
+            },
+            "row": {
+                "field": "sample",
+                "type": "nominal"
+            },
+            "color": {
+                "field": "sample",
+                "type": "nominal",
+                "legend": true
+            },
+            "tooltip": [
+                {
+                    "field": "position",
+                    "type": "genomic",
+                    "alt": "Position"
+                },
+                {
+                    "field": "peak",
+                    "type": "quantitative",
+                    "alt": "Value",
+                    "format": ".2"
+                },
+                {
+                    "field": "sample",
+                    "type": "nominal",
+                    "alt": "Sample"
+                }
+            ],
+            "width": 600,
+            "height": 160,
+            "assembly": "hg38",
+            "layout": "linear",
+            "orientation": "horizontal",
+            "static": false,
+            "zoomLimits": [
+                1,
+                null
+            ],
+            "xDomain": {
+                "chromosome": "1",
+                "interval": [
+                    1,
+                    3000500
+                ]
+            },
+            "centerRadius": 0.8,
+            "xOffset": 0,
+            "yOffset": 0,
+            "style": {},
+            "overlay": [
+                {
+                    "mark": "line",
+                    "style": {}
+                },
+                {
+                    "mark": "point",
+                    "size": {
+                        "field": "peak",
+                        "type": "quantitative",
+                        "range": [
+                            0,
+                            2
+                        ]
+                    },
+                    "style": {}
+                }
+            ],
+            "overlayOnPreviousTrack": false
+        },
+        "shape": {
+            "x": 0,
+            "y": 560,
+            "width": 600,
+            "height": 160
+        }
+    },
+    {
+        "id": "track-5",
+        "spec": {
+            "assembly": "hg38",
+            "layout": "linear",
+            "orientation": "horizontal",
+            "static": false,
+            "zoomLimits": [
+                1,
+                null
+            ],
+            "xDomain": {
+                "chromosome": "1",
+                "interval": [
+                    1,
+                    3000500
+                ]
+            },
+            "centerRadius": 0.8,
+            "xOffset": 0,
+            "yOffset": 0,
+            "style": {},
+            "id": "track-5",
+            "data": {
+                "url": "https://server.gosling-lang.org/api/v1/tileset_info/?d=cistrome-multivec",
+                "type": "multivec",
+                "row": "sample",
+                "column": "position",
+                "value": "peak",
+                "categories": [
+                    "sample 1",
+                    "sample 2",
+                    "sample 3",
+                    "sample 4"
+                ]
+            },
+            "mark": "point",
+            "x": {
+                "field": "position",
+                "type": "genomic",
+                "axis": "top",
+                "domain": {
+                    "chromosome": "1",
+                    "interval": [
+                        1,
+                        3000500
+                    ]
+                },
+                "linkingId": "18070169-e8e7-446b-9f17-773c0d5e3cd3"
+            },
+            "y": {
+                "field": "peak",
+                "type": "quantitative"
+            },
+            "row": {
+                "field": "sample",
+                "type": "nominal"
+            },
+            "size": {
+                "field": "peak",
+                "type": "quantitative"
+            },
+            "color": {
+                "field": "sample",
+                "type": "nominal",
+                "legend": true
+            },
+            "opacity": {
+                "value": 0.5
+            },
+            "tooltip": [
+                {
+                    "field": "position",
+                    "type": "genomic",
+                    "alt": "Position"
+                },
+                {
+                    "field": "peak",
+                    "type": "quantitative",
+                    "alt": "Value",
+                    "format": ".2"
+                },
+                {
+                    "field": "sample",
+                    "type": "nominal",
+                    "alt": "Sample"
+                }
+            ],
+            "width": 600,
+            "height": 160,
+            "overlayOnPreviousTrack": false
+        },
+        "shape": {
+            "x": 0,
+            "y": 730,
+            "width": 600,
+            "height": 160
+        }
+    },
+    {
+        "id": "track-6",
+        "spec": {
+            "assembly": "hg38",
+            "layout": "linear",
+            "orientation": "horizontal",
+            "static": false,
+            "zoomLimits": [
+                1,
+                null
+            ],
+            "xDomain": {
+                "chromosome": "1",
+                "interval": [
+                    1,
+                    3000500
+                ]
+            },
+            "centerRadius": 0.8,
+            "xOffset": 0,
+            "yOffset": 0,
+            "style": {},
+            "id": "track-6",
+            "data": {
+                "url": "https://server.gosling-lang.org/api/v1/tileset_info/?d=cistrome-multivec",
+                "type": "multivec",
+                "row": "sample",
+                "column": "position",
+                "value": "peak",
+                "categories": [
+                    "sample 1",
+                    "sample 2",
+                    "sample 3",
+                    "sample 4"
+                ]
+            },
+            "mark": "point",
+            "x": {
+                "field": "position",
+                "type": "genomic",
+                "axis": "top",
+                "domain": {
+                    "chromosome": "1",
+                    "interval": [
+                        1,
+                        3000500
+                    ]
+                },
+                "linkingId": "764131db-a86f-44b8-8413-5eae4b667552"
+            },
+            "y": {
+                "field": "peak",
+                "type": "quantitative",
+                "grid": true
+            },
+            "size": {
+                "field": "peak",
+                "type": "quantitative"
+            },
+            "color": {
+                "field": "sample",
+                "type": "nominal",
+                "legend": true
+            },
+            "opacity": {
+                "value": 0.5
+            },
+            "tooltip": [
+                {
+                    "field": "position",
+                    "type": "genomic",
+                    "alt": "Position"
+                },
+                {
+                    "field": "peak",
+                    "type": "quantitative",
+                    "alt": "Value",
+                    "format": ".2"
+                },
+                {
+                    "field": "sample",
+                    "type": "nominal",
+                    "alt": "Sample"
+                }
+            ],
+            "width": 600,
+            "height": 160,
+            "overlayOnPreviousTrack": false
+        },
+        "shape": {
+            "x": 0,
+            "y": 900,
+            "width": 600,
+            "height": 160
+        }
+    },
+    {
+        "id": "track-7",
+        "spec": {
+            "assembly": "hg38",
+            "layout": "linear",
+            "orientation": "horizontal",
+            "static": false,
+            "zoomLimits": [
+                1,
+                null
+            ],
+            "xDomain": {
+                "chromosome": "1",
+                "interval": [
+                    1,
+                    3000500
+                ]
+            },
+            "centerRadius": 0.8,
+            "xOffset": 0,
+            "yOffset": 0,
+            "style": {},
+            "id": "track-7",
+            "data": {
+                "url": "https://server.gosling-lang.org/api/v1/tileset_info/?d=cistrome-multivec",
+                "type": "multivec",
+                "row": "sample",
+                "column": "position",
+                "value": "peak",
+                "categories": [
+                    "sample 1",
+                    "sample 2",
+                    "sample 3",
+                    "sample 4"
+                ]
+            },
+            "mark": "area",
+            "x": {
+                "field": "position",
+                "type": "genomic",
+                "axis": "top",
+                "domain": {
+                    "chromosome": "1",
+                    "interval": [
+                        1,
+                        3000500
+                    ]
+                },
+                "linkingId": "a30df8b6-4df0-4606-88c0-261aca1a107b"
+            },
+            "y": {
+                "field": "peak",
+                "type": "quantitative"
+            },
+            "row": {
+                "field": "sample",
+                "type": "nominal"
+            },
+            "color": {
+                "field": "sample",
+                "type": "nominal",
+                "legend": true
+            },
+            "stroke": {
+                "value": "white"
+            },
+            "strokeWidth": {
+                "value": 0.5
+            },
+            "tooltip": [
+                {
+                    "field": "position",
+                    "type": "genomic",
+                    "alt": "Position"
+                },
+                {
+                    "field": "peak",
+                    "type": "quantitative",
+                    "alt": "Value",
+                    "format": ".2"
+                },
+                {
+                    "field": "sample",
+                    "type": "nominal",
+                    "alt": "Sample"
+                }
+            ],
+            "width": 600,
+            "height": 160,
+            "overlayOnPreviousTrack": false
+        },
+        "shape": {
+            "x": 0,
+            "y": 1070,
+            "width": 600,
+            "height": 160
+        }
+    },
+    {
+        "id": "track-8",
+        "spec": {
+            "assembly": "hg38",
+            "layout": "linear",
+            "orientation": "horizontal",
+            "static": false,
+            "zoomLimits": [
+                1,
+                null
+            ],
+            "xDomain": {
+                "chromosome": "1",
+                "interval": [
+                    1,
+                    3000500
+                ]
+            },
+            "centerRadius": 0.8,
+            "xOffset": 0,
+            "yOffset": 0,
+            "style": {},
+            "id": "track-8",
+            "data": {
+                "url": "https://server.gosling-lang.org/api/v1/tileset_info/?d=cistrome-multivec",
+                "type": "multivec",
+                "row": "sample",
+                "column": "position",
+                "value": "peak",
+                "categories": [
+                    "sample 1",
+                    "sample 2",
+                    "sample 3",
+                    "sample 4"
+                ],
+                "binSize": 4
+            },
+            "mark": "bar",
+            "x": {
+                "field": "start",
+                "type": "genomic",
+                "axis": "top",
+                "domain": {
+                    "chromosome": "1",
+                    "interval": [
+                        1,
+                        3000500
+                    ]
+                },
+                "linkingId": "39523c39-953e-436a-b501-e382cd04adfc"
+            },
+            "xe": {
+                "field": "end",
+                "type": "genomic",
+                "axis": "top"
+            },
+            "y": {
+                "field": "peak_min",
+                "type": "quantitative"
+            },
+            "ye": {
+                "field": "peak_max",
+                "type": "quantitative"
+            },
+            "row": {
+                "field": "sample",
+                "type": "nominal"
+            },
+            "color": {
+                "field": "sample",
+                "type": "nominal",
+                "legend": true
+            },
+            "stroke": {
+                "value": "black"
+            },
+            "strokeWidth": {
+                "value": 0.2
+            },
+            "tooltip": [
+                {
+                    "field": "position",
+                    "type": "genomic",
+                    "alt": "Position"
+                },
+                {
+                    "field": "peak_min",
+                    "type": "quantitative",
+                    "alt": "min(Value)",
+                    "format": ".2"
+                },
+                {
+                    "field": "peak_max",
+                    "type": "quantitative",
+                    "alt": "max(Value)",
+                    "format": ".2"
+                },
+                {
+                    "field": "sample",
+                    "type": "nominal",
+                    "alt": "Sample"
+                }
+            ],
+            "width": 600,
+            "height": 160,
+            "overlayOnPreviousTrack": false
+        },
+        "shape": {
+            "x": 0,
+            "y": 1240,
+            "width": 600,
+            "height": 160
+        }
+    },
+    {
+        "id": "track-9",
+        "spec": {
+            "assembly": "hg38",
+            "layout": "linear",
+            "orientation": "horizontal",
+            "static": false,
+            "zoomLimits": [
+                1,
+                null
+            ],
+            "xDomain": {
+                "chromosome": "1",
+                "interval": [
+                    1,
+                    3000500
+                ]
+            },
+            "centerRadius": 0.8,
+            "xOffset": 0,
+            "yOffset": 0,
+            "style": {},
+            "id": "track-9",
+            "data": {
+                "url": "https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/circos-segdup-edited.txt",
+                "type": "csv",
+                "chromosomeField": "c2",
+                "genomicFields": [
+                    "s1",
+                    "e1",
+                    "s2",
+                    "e2"
+                ]
+            },
+            "mark": "withinLink",
+            "x": {
+                "field": "s1",
+                "type": "genomic",
+                "domain": {
+                    "chromosome": "1",
+                    "interval": [
+                        103900000,
+                        104100000
+                    ]
+                },
+                "linkingId": "04539f50-c65b-4723-86ce-2fe984f1ee7e",
+                "axis": "top"
+            },
+            "xe": {
+                "field": "e1",
+                "type": "genomic"
+            },
+            "x1": {
+                "field": "s2",
+                "type": "genomic",
+                "domain": {
+                    "chromosome": "1"
+                }
+            },
+            "x1e": {
+                "field": "e2",
+                "type": "genomic"
+            },
+            "color": {
+                "field": "s1",
+                "type": "nominal"
+            },
+            "stroke": {
+                "value": "black"
+            },
+            "strokeWidth": {
+                "value": 0.5
+            },
+            "opacity": {
+                "value": 0.2
+            },
+            "width": 600,
+            "height": 160,
+            "overlayOnPreviousTrack": false
+        },
+        "shape": {
+            "x": 0,
+            "y": 1410,
+            "width": 600,
+            "height": 160
+        }
+    }
+]
