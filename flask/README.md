@@ -2,7 +2,6 @@
 
 This is the code repository for the flask backend of autogosling
 
-
 ## Authors
 
 - [@mnqng](https://www.github.com/mnqng)
