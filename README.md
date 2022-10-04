@@ -12,6 +12,7 @@ If you are on Windows, run
 conda env export -f myenv.yml
 ```
 and manually remove the "prefix:" line
+
 ## Authors
 
 - [@mnqng](https://www.github.com/mnqng)
