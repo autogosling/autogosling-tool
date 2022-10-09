@@ -4,10 +4,13 @@ import { VIZ_BACKEND_URL } from './Config';
 import './App.css';
 
 function DataResult({ data } : {data : any}) {
-  const { image, ...rest } = data
+  const { image, labelled_image, ...rest } = data
   return (
     <div>
       <h3>Viz Analysis Results</h3>
+      <h6>Labelled Image (from JSON)</h6>
+      <img src={labelled_image} />
+      <h6>Image with Predictions (from Yolov4)</h6>
       <img src={image} />
       <pre>{JSON.stringify(rest, null, 2)}</pre>
 
@@ -36,7 +39,8 @@ function App() {
       <p>Upload your image here:</p>
       <form onSubmit={handleSubmit}>
         <input type="file" name="image" id="image" />
-        <button type="submit">Submit image</button>
+        <input type="file" name="json" id="image" />
+        <button type="submit">Submit image and labels</button>
       </form>
       <br />
       {(hasData && !error) && <DataResult data={data} />}

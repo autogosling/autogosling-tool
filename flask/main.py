@@ -3,7 +3,8 @@ from flask_cors import CORS
 import numpy as np
 import yolov4
 from PIL import Image
-from image_helper import draw_bounding_boxes
+import json
+from image_helper import draw_bounding_boxes, get_true_labelled_image
 import base64
 from io import BytesIO
 yo = yolov4.YOLOv4(num_classes=80)
@@ -37,9 +38,11 @@ def perform_inference(pil_image):
 @app.route('/viz_analysis',methods=["POST"])
 def viz_analysis():
     image = request.files['image']
+    json_labels = json.load(request.files['json'])
     pil_image = Image.open(image)
     results = perform_inference(pil_image)
-    return jsonify(results)
+    labelled_true_image = get_true_labelled_image(pil_image,json_labels)
+    return jsonify({**results, "labelled_image" : pil2datauri(labelled_true_image)})
 
 print("running app!")
 app.run(host="0.0.0.0",port=5001)
