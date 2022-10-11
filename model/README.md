@@ -14,11 +14,7 @@ The test-spec.json comes from https://raw.githubusercontent.com/wangqianwen0418/
 
 ## Features
 
-- Light/dark mode toggle
-- Live previews
-- Fullscreen mode
-- Cross platform
-
+- To do
 
 ## Installation
 
