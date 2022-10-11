@@ -40,6 +40,8 @@ def viz_analysis():
     image = request.files['image']
     json_labels = json.load(request.files['json'])
     pil_image = Image.open(image)
+    if not pil_image.mode == 'RGB':
+        pil_image = pil_image.convert('RGB')
     results = perform_inference(pil_image)
     labelled_true_image = get_true_labelled_image(pil_image,json_labels)
     return jsonify({**results, "labelled_image" : pil2datauri(labelled_true_image)})
