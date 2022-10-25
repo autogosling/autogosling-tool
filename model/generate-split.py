@@ -13,17 +13,28 @@ split-42-0.2
 import os
 from pathlib import Path
 from shutil import copyfile
-from sklearn.model_selection import train_test_split
+# from sklearn.model_selection import train_test_split
+import numpy as np
 from os.path import join as pjoin
 
 SEED = 42
 TEST_SIZE = 0.2
 
+np.random.seed(SEED)
+
 split_configuration = {
-    "image_folder" : "data/image",
-    "bbox_folder" : "data/bbox",
-    "label_folder" : "data/label"
+    "image_folder" : "data/screenshot",
+    "bbox_folder" : "data/bounding_box",
+    "label_folder" : "data/specs"
 }
+
+# temporary fix until I fix my sklearn import
+def train_test_split(common_ids,test_size=0.2):
+    inds = np.arange(0,len(common_ids))
+    np.random.shuffle(inds)
+    test_ind = int(test_size * len(inds))
+    return common_ids[test_ind:], common_ids[:test_ind]
+
 
 def extract_mapping_ids(folder_path):
     '''Returns a mapping dictionary that has the shape {`00001` : `train-images/00001.png`, `00002` : `train_images/00002.png`, ...}'''
@@ -42,24 +53,30 @@ def generate_folders(output_directory, mode):
             os.makedirs(folder_path)
     return all_folders
 
-def copy_dataset(output_ids, output_folder):
-    
+def copy_dataset(output_ids, output_folders,all_mappings_ids):
     for sample_id in output_ids:
-        copyfile()
-    # todo
+        for name, output_dir in output_folders.items(): 
+            src_path = all_mappings_ids[name][sample_id]
+            filename = Path(src_path).name
+            output_path = pjoin(output_dir,filename)
+            copyfile(src_path,output_path)
 
 def create_split(image_folder,bbox_folder,label_folder):
-    all_mapping_ids_set = {folder_name:extract_mapping_ids(folder_name) for folder_name in [image_folder,label_folder,bbox_folder]}
-    all_ids = [set(mapping_id.keys()) for mapping_id in all_mapping_ids_set]
+    # import ipdb; ipdb.set_trace()
+    folder_paths = [image_folder, bbox_folder, label_folder]
+    folder_names = ["image", "bbox", "label"]
+    all_mapping_ids_set = {folder_name:extract_mapping_ids(folder_path) for folder_name, folder_path in zip(folder_names, folder_paths)}
+    all_ids = [set(mapping_id.keys()) for mapping_id in all_mapping_ids_set.values()]
     common_ids = list(set.intersection(*all_ids))
-    train_ids, test_ids = train_test_split(common_ids,random_state=SEED,test_size=TEST_SIZE)
-    output_directory = f"split-{SEED}-{TEST_SIZE}"
+    train_ids, test_ids = train_test_split(common_ids,test_size=TEST_SIZE)
+    output_directory = f"data/splits/split-{SEED}-{TEST_SIZE}"
     train_folders = generate_folders(output_directory,"train")
     test_folders = generate_folders(output_directory,"test")
-
-    copy_dataset(train_ids,train_folders)
-    copy_dataset(test_ids,test_folders)
-
+    copy_dataset(train_ids,train_folders,all_mapping_ids_set)
+    copy_dataset(test_ids,test_folders,all_mapping_ids_set)
 
 
 
+if __name__ == "__main__":
+    create_split(**split_configuration)
+    print(f"Finished creating split of seed {SEED} and test_size {TEST_SIZE}")
