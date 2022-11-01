@@ -16,6 +16,7 @@ def load_json(filename):
         json_text = f.read()
         return json.loads(json_text)
 
+# Read dataset
 class GoslingDataset(Dataset):
     def __init__(self, image_folder, label_folder, bbox_folder):
         self.image_folder = image_folder
@@ -59,3 +60,7 @@ test_config = {
 }
 train_dataset = GoslingDataset(**train_config)
 test_dataset = GoslingDataset(**test_config)
+
+
+
+
