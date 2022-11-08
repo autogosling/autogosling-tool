@@ -5,28 +5,6 @@ images/00001.png x1,y1,x2,y2,class_id x1,y1,x2,y2,class_id x1,y1,x2,y2,class_id 
 images/00002.png x1,y1,x2,y2,class_id x1,y1,x2,y2,class_id 
 
 where x1, y1, x2, y2 are the coordinates of the bounding boxes
-
-
-Data path: 
-test: model/data/splits/split-42-0.2/test
-train: model/data/splits/split-42-0.2/train
-
-images: images/
-bounding boxes: bounding_box
-
-if rectangular, 
-x1 = x
-y1 = y
-x2 = x+width
-y2 = y+height
-
-if circular,
-x1 = cx - outer_radius
-y1 = cy - outer_radius
-x2 = cx + outer_radius
-y2 = cy + outer_radius
-
-label: label
 '''
 
 import json
@@ -91,3 +69,5 @@ if __name__ == "__main__":
     path = 'data/splits/split-42-0.2/'
     generate_yolo_txt(os.path.join(path, 'train'), 'train')
     generate_yolo_txt(os.path.join(path, 'test'), 'test')
+
+
