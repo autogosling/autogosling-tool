@@ -26,6 +26,7 @@ from os.path import join as pjoin
 
 SEED = 42
 TEST_SIZE = 0.2
+VALID_SIZE = 0.1 # it is 10% of the training set
 
 np.random.seed(SEED)
 
@@ -75,12 +76,15 @@ def create_split(image_folder,bbox_folder,label_folder):
     all_ids = [set(mapping_id.keys()) for mapping_id in all_mapping_ids_set.values()]
     common_ids = list(set.intersection(*all_ids))
     train_ids, test_ids = train_test_split(common_ids,test_size=TEST_SIZE)
+    train_ids, valid_ids = train_test_split(train_ids,test_size=VALID_SIZE)
     output_directory = f"data/splits/split-{SEED}-{TEST_SIZE}"
     train_folders = generate_folders(output_directory,"train")
+    valid_folders = generate_folders(output_directory,"valid")
     test_folders = generate_folders(output_directory,"test")
     copy_dataset(train_ids,train_folders,all_mapping_ids_set)
+    copy_dataset(valid_ids,valid_folders,all_mapping_ids_set)
     copy_dataset(test_ids,test_folders,all_mapping_ids_set)
 
 if __name__ == "__main__":
     create_split(**split_configuration)
-    print(f"Finished creating split of seed {SEED} and test_size {TEST_SIZE}")
+    print(f"Finished creating split of seed {SEED} and test_size {TEST_SIZE} and valid size {VALID_SIZE}")
