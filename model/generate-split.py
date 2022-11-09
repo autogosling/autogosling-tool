@@ -33,7 +33,8 @@ np.random.seed(SEED)
 split_configuration = {
     "image_folder" : "data/screenshot",
     "bbox_folder" : "data/bounding_box",
-    "label_folder" : "data/layouts"
+    "label_folder" : "data/layouts",
+    "mark_folder" : "data/marks"
 }
 
 # temporary fix until I fix my sklearn import
@@ -51,7 +52,7 @@ def extract_mapping_ids(folder_path):
 
 def generate_folders(output_directory, mode):
     '''Generates 3 folders (image, bounding boxes, label) given a mode "train" or "test"'''
-    folder_names = ["images", "bbox", "label"]
+    folder_names = ["images", "bbox", "label","marks"]
     all_folders = {
         # this join statement will make a folder called split-42-0.2/train/images for example
         folder_name : pjoin(output_directory,mode,folder_name) for folder_name in folder_names
@@ -69,9 +70,9 @@ def copy_dataset(output_ids, output_folders,all_mappings_ids):
             output_path = pjoin(output_dir,filename)
             copyfile(src_path,output_path)
 
-def create_split(image_folder,bbox_folder,label_folder):
-    folder_paths = [image_folder, bbox_folder, label_folder]
-    folder_names = ["images", "bbox", "label"]
+def create_split(image_folder,bbox_folder,label_folder,mark_folder):
+    folder_paths = [image_folder, bbox_folder, label_folder,mark_folder]
+    folder_names = ["images", "bbox", "label","marks"]
     all_mapping_ids_set = {folder_name:extract_mapping_ids(folder_path) for folder_name, folder_path in zip(folder_names, folder_paths)}
     all_ids = [set(mapping_id.keys()) for mapping_id in all_mapping_ids_set.values()]
     common_ids = list(set.intersection(*all_ids))
