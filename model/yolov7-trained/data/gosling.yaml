@@ -1,0 +1,7 @@
+train: ../yolov7-42-0.2/images/train
+val: ../yolov7-42-0.2/images/valid
+test: ../yolov7-42-0.2/images/test
+ 
+# Classes
+nc: 8  # number of classes
+names: ['area','bar','circular','header','linear','point','rect','withinLink']  # class names

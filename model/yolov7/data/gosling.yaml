@@ -1,0 +1,7 @@
+train: ../data/splits/split-42-0.2/yolov7-42-0.2/images/train
+val: ../data/splits/split-42-0.2/yolov7-42-0.2/images/valid
+test: ../data/splits/split-42-0.2/yolov7-42-0.2/images/test
+
+nc: 2
+names: ['circular', 'linear']
+
