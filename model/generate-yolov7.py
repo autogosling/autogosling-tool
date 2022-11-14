@@ -99,7 +99,7 @@ def convert_txt(json_path,marks_content, full_w,full_h):
             category = "linear"
         elif "outerRadius" in item: # then it is circular
             cx, cy = item['cx'], item['cy']
-            w = h = item['outerRadius']
+            w = h = 2 * item['outerRadius']
             category = "circular"
         else:
             return None
