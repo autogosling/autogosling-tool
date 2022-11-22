@@ -17,8 +17,8 @@ CORS(app)
 def main_route():
     return "Hello! This is the main route."
 
-def predict(yolo_model,image):
-    boxes, classes, scores = yolo_model.predict(np.array(image))
+def predict(image):
+    boxes, classes, scores = yo.predict(np.array(image))
     annotated_img = draw_bounding_boxes(image,boxes,classes,scores)
     return boxes.tolist(), classes.tolist(), scores.tolist(), annotated_img
 
@@ -32,7 +32,7 @@ def pil2datauri(img):
 def perform_inference(pil_image):
     # this is a placeholder code. it currently returns the width and height of the image, but it should later be adapted to return the appropriate specs.
     width, height = pil_image.size
-    boxes, classes, scores, annotated_img = predict(yo,pil_image)
+    boxes, classes, scores, annotated_img = predict(pil_image)
     return {"boxes" : boxes, "classes" : classes,"scores" : scores, "width" : width, "height" : height, "image" : pil2datauri(annotated_img)}
 
 @app.route('/viz_analysis',methods=["POST"])

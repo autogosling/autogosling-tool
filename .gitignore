@@ -437,6 +437,10 @@ cython_debug/
 
 # End of https://www.toptal.com/developers/gitignore/api/python,flask,visualstudiocode
 
-
-# data used to train model
+# Data used to train model
 model/data/**
+
+# Detections 
+model/yolov7-trained/runs/detect/**
+
+model/best.onnx
