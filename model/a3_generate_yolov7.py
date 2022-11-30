@@ -44,22 +44,21 @@ from shutil import copyfile
 import numpy as np
 from PIL import Image
 from os.path import join as pjoin
+from a0_config import IMAGE_FOLDER, BBOX_FOLDER, CLASS_FOLDERS, split_config, CLASS_FOLDER_NAMES, YOLOV7_LABELS, YOLOV7_IMAGES
 
-SEED = 42
-TEST_SIZE = 0.2
 
-np.random.seed(SEED)
 
-yolov7_configuration = {
-    "split_folder" : "data/splits/split-42-0.2",
-    "output_folder" : "data/splits/split-42-0.2/yolov7-42-0.2"
+yolov7_config = {
+    "split_folder" : "data/splits/split-42-0.2-0.1",
+    "output_folder" : "data/splits/split-42-0.2-0.1/yolov7-42-0.2-0.1"
 }
 
-IMAGES = "images"
-BBOX = "bbox"
-LABELS = "labels"
+# IMAGE_DIR = Path(split_config)
+IMAGES = Path(split_config[IMAGE_FOLDER]).name
+BBOX = Path(split_config[BBOX_FOLDER]).name
 
-def load_mapping(mapping_fn="data/class_mapping-backup.json"):
+
+def load_mapping(mapping_fn="data/class_mapping.json"):
     with open(mapping_fn,"r") as f:
         return json.load(f)
 
@@ -70,7 +69,7 @@ def make_folders_if_not_exist(folder_path):
 
 def copy_images(split_folder,output_folder,mode):
     src_images = pjoin(split_folder,mode,IMAGES)
-    dest_images = pjoin(output_folder,IMAGES,mode)
+    dest_images = pjoin(output_folder,YOLOV7_IMAGES,mode)
     make_folders_if_not_exist(dest_images)
     size_dict = {}
 
@@ -86,21 +85,19 @@ def copy_images(split_folder,output_folder,mode):
 def get_class_ind(string):
     return CLASS_MAPPING.get(string,-1)
 
-def convert_txt(json_path,marks_content, full_w,full_h):
+def convert_txt(json_path,classes, full_w,full_h):
     data = []
     with open(json_path,"r") as f:
         data = json.load(f)
-    def parse_item(item,mark):
+    def parse_item(item,current_classes):
         cx,cy,w,h = None, None, None, None
         category = 0
         if "width" in item: # then this is rectangular
             x,y,w,h = item["x"], item["y"], item['width'], item['height']
             cx, cy = x + w/2, y + h/2
-            category = "linear"
         elif "outerRadius" in item: # then it is circular
             cx, cy = item['cx'], item['cy']
             w = h = item['outerRadius']
-            category = "circular"
         else:
             return None
         cx /= full_w
@@ -108,13 +105,10 @@ def convert_txt(json_path,marks_content, full_w,full_h):
         w /= full_w
         h /= full_h
 
-        category_ind = get_class_ind(category)
-        mark_ind = get_class_ind(mark)
         rest_data = ' '.join([str(el) for el in [cx,cy,w,h]])
-        inds = [category_ind, mark_ind]
-        return [f"{ind} {rest_data}" for ind in inds if ind != -1]
+        return [f"{ind} {rest_data}" for ind in current_classes if ind != -1]
 
-    nested_lists = filter(lambda el: el is not None,[parse_item(item,mark) for item,mark in zip(data,marks_content)])
+    nested_lists = filter(lambda el: el is not None,[parse_item(item,current_classes) for item,current_classes in zip(data,classes)])
     flattened_set = set([el for sublist in nested_lists for el in sublist])
     content = '\n'.join(flattened_set)
     return content
@@ -124,41 +118,59 @@ def write_txt(fn,content):
     with open(fn,"w") as f:
         f.write(content)
 
-def read_marks(stem_path,split_folder,mode):
-    complete_path = pjoin(split_folder, mode,"marks", stem_path + ".json")
-    marks = []
-    with open(complete_path,"r") as f:
-        marks = json.load(f)
-    return marks
+def read_classes(stem_path,split_folder,mode):
+
+    def gather_classes_json(folder):
+        folder_name = Path(split_config[folder+"_folder"]).name
+        complete_path = pjoin(split_folder,mode,folder_name,stem_path+".json")
+        classes = []
+        with open(complete_path,"r") as f:
+            classes = json.load(f)
+        return classes
+
+    def convert_list(class_list):
+        return [CLASS_MAPPING[class_el] for class_el in class_list]
+    
+    all_classes = [gather_classes_json(folder) for folder in CLASS_FOLDER_NAMES]
+    return [convert_list(class_list) for class_list in zip(*all_classes)] 
+    
+        
 
 def copy_and_convert_labels(split_folder,output_folder,mode,img_sizes):
-    src_labels = pjoin(split_folder,mode,BBOX)
-    dest_labels = pjoin(output_folder,LABELS,mode)
+    src_bbox_path = pjoin(split_folder,mode,BBOX)
+    dest_labels = pjoin(output_folder,YOLOV7_LABELS,mode)
     make_folders_if_not_exist(dest_labels)
-
-    for json_label_path in os.listdir(src_labels):
-        complete_src_label_path = pjoin(src_labels,json_label_path)
+    total_not_found = 0
+    total_found = 0
+    for json_label_path in os.listdir(src_bbox_path):
+        complete_src_bbox_path = pjoin(src_bbox_path,json_label_path)
         stem_path = json_label_path.split(".")[0]
         dest_end = stem_path + ".txt"
+        if stem_path not in img_sizes:
+            # print("Not found:",stem_path)
+            total_not_found += 1
+            continue
+        if stem_path in img_sizes:
+            # print("Found:", stem_path)
+            total_found += 1
         full_w, full_h = img_sizes[stem_path]
         complete_dest_label_path = pjoin(dest_labels,dest_end)
-        marks_content = read_marks(stem_path,split_folder,mode)
-        txt_content = convert_txt(complete_src_label_path,marks_content, full_w, full_h)
+        classes_content = read_classes(stem_path,split_folder,mode)
+        txt_content = convert_txt(complete_src_bbox_path,classes_content, full_w, full_h)
         write_txt(complete_dest_label_path,txt_content)
 
+    print(f"Mode: {mode}. Found: {total_found} Not Found:{total_not_found}")
 
-def generate_yolov7_folder(split_folder,output_folder):
+def generate_yolov7_folder(yolov7_config):
     # read through train path to extract and copy the images first
-    train_img_sizes = copy_images(split_folder,output_folder,"train")
-    copy_and_convert_labels(split_folder,output_folder,"train",train_img_sizes)
-
-    test_img_sizes = copy_images(split_folder,output_folder,"test")
-    copy_and_convert_labels(split_folder,output_folder,"test",test_img_sizes)
-
-    valid_img_sizes = copy_images(split_folder,output_folder,"valid")
-    copy_and_convert_labels(split_folder,output_folder,"valid",valid_img_sizes)
+    split_folder = yolov7_config['split_folder']
+    output_folder = yolov7_config['output_folder']
+    modes = ['train','test','valid']
+    for mode in modes:
+        img_sizes = copy_images(split_folder,output_folder,mode)
+        copy_and_convert_labels(split_folder,output_folder,mode,img_sizes)
 
 
 if __name__ == "__main__":
-    generate_yolov7_folder(**yolov7_configuration)
-    print(f"Finished generating yolov7 folder!")
+    generate_yolov7_folder(yolov7_config)
+    print(f"Finished generating yolov7 folder at {yolov7_config['output_folder']}")

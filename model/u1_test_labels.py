@@ -1,3 +1,6 @@
+'''
+This is a utility script to count the total occurence of labels in the dataset generated after a3_generate_yolov7.py
+'''
 from os.path import join as pjoin
 from collections import Counter
 import os

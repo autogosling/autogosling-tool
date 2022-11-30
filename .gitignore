@@ -1,5 +1,5 @@
 yolov4.weights
-
+model/previews/
 # Created by https://www.toptal.com/developers/gitignore/api/node,react
 # Edit at https://www.toptal.com/developers/gitignore?templates=node,react
 
@@ -443,4 +443,4 @@ model/data/**
 # Detections 
 model/yolov7-trained/runs/detect/**
 
-model/best.onnx
+best.onnx
