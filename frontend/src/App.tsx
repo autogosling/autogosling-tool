@@ -4,14 +4,16 @@ import { VIZ_BACKEND_URL } from './Config';
 import './App.css';
 
 function DataResult({ data } : {data : any}) {
-  const { image, labelled_image, ...rest } = data
+  const { labelled_image, shape_image, property_image, ...rest } = data
   return (
     <div>
       <h3>Viz Analysis Results</h3>
       <h6>Labelled Image (from JSON)</h6>
       <img src={labelled_image} />
-      <h6>Image with Predictions (from Yolov4)</h6>
-      <img src={image} />
+      <h6>YoloV7's predictions of the charts' shape</h6>
+      <img src={shape_image} />
+      <h6>YoloV7's predictions of the chart's type</h6>
+      <img src={property_image} />
       <pre>{JSON.stringify(rest, null, 2)}</pre>
 
     </div>)

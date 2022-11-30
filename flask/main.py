@@ -5,10 +5,9 @@ import yolov4
 from PIL import Image
 import json
 from image_helper import draw_bounding_boxes, get_true_labelled_image
+from yolov7_demo import predict
 import base64
 from io import BytesIO
-yo = yolov4.YOLOv4(num_classes=80)
-yo.load_weights(weights_path=None)
 
 app = Flask(__name__)
 CORS(app)
@@ -16,11 +15,6 @@ CORS(app)
 @app.route('/',methods=["GET"])
 def main_route():
     return "Hello! This is the main route."
-
-def predict(image):
-    boxes, classes, scores = yo.predict(np.array(image))
-    annotated_img = draw_bounding_boxes(image,boxes,classes,scores)
-    return boxes.tolist(), classes.tolist(), scores.tolist(), annotated_img
 
 def pil2datauri(img):
     #converts PIL image to datauri
@@ -42,9 +36,15 @@ def viz_analysis():
     pil_image = Image.open(image)
     if not pil_image.mode == 'RGB':
         pil_image = pil_image.convert('RGB')
-    results = perform_inference(pil_image)
+    shape_img, prop_img = predict(pil_image)
     labelled_true_image = get_true_labelled_image(pil_image,json_labels)
-    return jsonify({**results, "labelled_image" : pil2datauri(labelled_true_image)})
+    images = {
+        "labelled_image" : labelled_true_image,
+        "shape_image" : shape_img,
+        "property_image" : prop_img
+    }
+    images_datauri = {key:pil2datauri(val) for key, val in images.items()}
+    return jsonify({**images_datauri})
 
 print("running app!")
 app.run(host="0.0.0.0",port=5001)

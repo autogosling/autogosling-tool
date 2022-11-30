@@ -1,7 +1,10 @@
 
 # autogosling-model
-
 This is the code repository for any modeling required for autogosling.
+
+## 1. Data processing
+- ```generate_split.py```: 
+- ```data_conversion.py```: 
 
 
 ## Authors
