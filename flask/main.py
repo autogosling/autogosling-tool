@@ -8,6 +8,7 @@ from image_helper import draw_bounding_boxes, get_true_labelled_image
 from yolov7_demo import predict
 import base64
 from io import BytesIO
+from assemble import construct_spec, EX_TRACK_INFO
 
 app = Flask(__name__)
 CORS(app)
@@ -29,6 +30,7 @@ def perform_inference(pil_image):
     boxes, classes, scores, annotated_img = predict(pil_image)
     return {"boxes" : boxes, "classes" : classes,"scores" : scores, "width" : width, "height" : height, "image" : pil2datauri(annotated_img)}
 
+
 @app.route('/viz_analysis',methods=["POST"])
 def viz_analysis():
     image = request.files['image']
@@ -38,10 +40,14 @@ def viz_analysis():
         pil_image = pil_image.convert('RGB')
     shape_img, prop_img = predict(pil_image)
     labelled_true_image = get_true_labelled_image(pil_image,json_labels)
+    tracks_info = EX_TRACK_INFO
+    # tracks_info = # Load actual info
+    spec = construct_spec(tracks_info,"vertical")
     images = {
         "labelled_image" : labelled_true_image,
         "shape_image" : shape_img,
-        "property_image" : prop_img
+        "property_image" : prop_img,
+        "spec": spec,
     }
     images_datauri = {key:pil2datauri(val) for key, val in images.items()}
     return jsonify({**images_datauri})
