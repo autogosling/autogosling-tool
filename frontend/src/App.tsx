@@ -1,7 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
 import { VIZ_BACKEND_URL } from './Config';
 import './App.css';
+import {GoslingEditorPre, DEFAULT_SPEC} from './GoslingEditorPre';
+import {GoslingComponent} from "gosling.js";
+import {EX_SPEC_BASIC_SEMANTIC_ZOOM} from "./default_specs";
+
+
 
 function DataResult({ data } : {data : any}) {
   const { labelled_image, shape_image, property_image, ...rest } = data
@@ -22,6 +27,7 @@ function App() {
   const [hasData, setHasData] = useState(false)
   const [data, setData] = useState(null)
   const [error, setError] = useState(false)
+  const gosRef = React.useRef(null)
   const handleSubmit = async (e: any) => {
     e.preventDefault()
     const formObject = new FormData(e.currentTarget)
@@ -35,6 +41,8 @@ function App() {
     setHasData(true)
     setData(json)
   }
+  
+
   return (
     <div className="App">
       <h1>Autogosling Frontend</h1>
@@ -45,7 +53,9 @@ function App() {
         <button type="submit">Submit image and labels</button>
       </form>
       <br />
+      <GoslingEditorPre spec={DEFAULT_SPEC}/>
       {(hasData && !error) && <DataResult data={data} />}
+      {(hasData && !error) &&<GoslingEditorPre spec={DEFAULT_SPEC}/>}
     </div>
   );
 }
