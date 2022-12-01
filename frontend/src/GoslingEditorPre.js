@@ -109,8 +109,9 @@ class GoslingEditorPre extends React.Component {
         try {
             const spec = stripJsonComments(code)
             const validateInfo = validateGoslingSpec(spec)
-
+  
             if (validateInfo.state = 'success') {
+                
                 this.setState({
                     spec,
                     code,
@@ -126,14 +127,26 @@ class GoslingEditorPre extends React.Component {
             })
         }
     }
+    
 
     reset() {
         this.setState({ spec: stripJsonComments(this.props.spec), code: this.props.spec })
     }
     render() {
         const { log } = this.state
+        console.log(this.state.spec)
         return <div className='gosling-container' id="goslingEditor">
-            <div className='codeContainer' style={{ position: "relative", width: "100%"}}>
+            <div style={{ margin: '5px 10px' }}>
+                <span><b>You can interact with the visualization through zoom and pan, or modify it by changing the code above</b></span>
+            </div>
+            <div style={{ margin: '0 60px' }}>
+                <GoslingComponent
+                    spec={this.state.spec}
+                    padding={20}
+                    className='gosling-component'
+                />
+            </div>
+            <div className='codeContainer' style={{ position: "relative", width: "50%"}}>
                 <MonacoEditor
                     height={500}
                     width='100%'
@@ -147,16 +160,7 @@ class GoslingEditorPre extends React.Component {
                 <div className={`compile-message compile-message-${log.state}`}>{log.message}</div>
                 <button type="button" className='float-button' onClick={this.reset}>Reset</button>
             </div>
-            <div style={{ margin: '5px 10px' }}>
-                <span><b>You can interact with the visualization through zoom and pan, or modify it by changing the code above</b></span>
-            </div>
-            <div style={{ margin: '0 60px' }}>
-                <GoslingComponent
-                    spec={this.state.spec}
-                    padding={20}
-                    className='gosling-component'
-                />
-            </div>
+            
         </div>
     }
 }
