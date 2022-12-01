@@ -1,5 +1,18 @@
+# Data used to train model
+model/data/**
+
+# Clone of Yolov7 repo
+model/yolov7/**
+
+# Detections 
+model/yolov7-trained/runs/detect/**
+
+best.onnx
+
 yolov4.weights
 model/previews/
+
+
 # Created by https://www.toptal.com/developers/gitignore/api/node,react
 # Edit at https://www.toptal.com/developers/gitignore?templates=node,react
 
@@ -436,11 +449,3 @@ cython_debug/
 *.code-workspace
 
 # End of https://www.toptal.com/developers/gitignore/api/python,flask,visualstudiocode
-
-# Data used to train model
-model/data/**
-
-# Detections 
-model/yolov7-trained/runs/detect/**
-
-best.onnx

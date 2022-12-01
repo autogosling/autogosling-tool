@@ -5,7 +5,7 @@ This is the code repository for the frontend of autogosling.
 
 ## Authors
 
-- [@mnqng](https://www.github.com/mnqng)
+- [@mnqng](https://www.github.com/mnqng)/[mq-liang](https://github.com/mq-liang)
 
 
 ## Features
