@@ -47,10 +47,11 @@ def viz_analysis():
         "labelled_image" : labelled_true_image,
         "shape_image" : shape_img,
         "property_image" : prop_img,
-        "spec": spec,
     }
-    images_datauri = {key:pil2datauri(val) for key, val in images.items()}
-    return jsonify({**images_datauri})
+    response = {key:pil2datauri(val) for key, val in images.items()}
+    response["spec"]=json.dumps(spec)
+    return jsonify({**response})
+
 
 print("running app!")
 app.run(host="0.0.0.0",port=5001)
