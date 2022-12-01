@@ -23,6 +23,7 @@ DEFAULT_BAR_TRACK = {
       "size": {"value": 5}
     }
 
+EX_TRACK_INFO = [{'x': 0, 'y': 0, 'width': 400, 'height': 430, 'layout': 'linear', 'mark': 'bar'}, {'x': 0, 'y': 450, 'width': 400, 'height': 430, 'layout': 'linear', 'mark': 'line'}, {'x': 410, 'y': 0, 'width': 400, 'height': 880, 'layout': 'linear', 'mark': 'point'}, {'x': 0, 'y': 890, 'width': 800, 'height': 210, 'layout': 'linear', 'mark': 'area'}, {'x': 0, 'y': 1100, 'width': 800, 'height': 210, 'layout': 'linear', 'mark': 'line'}]
 
 EXTRACTED_INFO_PATH = "../data/extracted"
 def create_filenames(example):
@@ -65,14 +66,14 @@ def get_bbox_xs(track_info):
 def get_bbox_ys(track_info):
     return track_info["y"], track_info["y"]+track_info["height"]
 
-def construct_spec(track_infos, arrangement):
-    if len(track_infos) == 1:
+def construct_spec(tracks_info, arrangement):
+    if len(tracks_info) == 1:
         return {
-            "tracks": [create_track(track_info) for track_info in track_infos]
+            "tracks": [create_track(track_info) for track_info in tracks_info]
         }
     if arrangement == "vertical":
         new_arrangement = "horizontal"
-        y_sorted_infos = sorted(track_infos,key=get_bbox_ys)
+        y_sorted_infos = sorted(tracks_info,key=get_bbox_ys)
         all_views = []
         curr_y_high = get_bbox_ys(y_sorted_infos[0])[1]
         curr_view = [y_sorted_infos[0]]
@@ -92,7 +93,7 @@ def construct_spec(track_infos, arrangement):
         }
     elif arrangement == "horizontal":
         new_arrangement = "vertical"
-        x_sorted_infos = sorted(track_infos,key=get_bbox_xs)
+        x_sorted_infos = sorted(tracks_info,key=get_bbox_xs)
         all_views = []
         curr_x_high = get_bbox_xs(x_sorted_infos[0])[1]
         curr_view = [x_sorted_infos[0]]
@@ -112,24 +113,6 @@ def construct_spec(track_infos, arrangement):
         }
 
 
-
-
-def make_spec(track_hierarchy, track_infos):
-    for v0 in track_hierarchy["views"]:
-        for v1 in v0["views"]:
-            for v2 in v1["views"]:
-                new_tracks = []
-                for t in v2["tracks"]:
-                    new_tracks.append(create_track(track_infos[t]))
-                v2["tracks"] = new_tracks
-    return track_hierarchy
-
-ex_track_info = {"layout":"linear",
-                "mark":"line",
-                "width":400,
-                "height":210}
-
-#print(assemble_views([ex_track_info]))
 
 
 if __name__ == "__main__":

@@ -9,7 +9,7 @@ import {EX_SPEC_BASIC_SEMANTIC_ZOOM} from "./default_specs";
 
 
 function DataResult({ data } : {data : any}) {
-  const { labelled_image, shape_image, property_image, ...rest } = data
+  const { labelled_image, shape_image, property_image, spec, ...rest } = data
   return (
     <div>
       <h3>Viz Analysis Results</h3>
@@ -20,7 +20,7 @@ function DataResult({ data } : {data : any}) {
       <h6>YoloV7's predictions of the chart's type</h6>
       <img src={property_image} />
       <pre>{JSON.stringify(rest, null, 2)}</pre>
-
+      <GoslingEditorPre spec={spec}/>
     </div>)
 }
 function App() {
@@ -53,9 +53,8 @@ function App() {
         <button type="submit">Submit image and labels</button>
       </form>
       <br />
-      <GoslingEditorPre spec={DEFAULT_SPEC}/>
       {(hasData && !error) && <DataResult data={data} />}
-      {(hasData && !error) &&<GoslingEditorPre spec={DEFAULT_SPEC}/>}
+      {/* {(hasData && !error) &&<GoslingEditorPre spec={DEFAULT_SPEC}/>} */}
     </div>
   );
 }
