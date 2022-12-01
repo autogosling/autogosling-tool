@@ -47,7 +47,7 @@ def viz_analysis():
         "labelled_image" : labelled_true_image,
         "shape_image" : shape_img,
         "property_image" : prop_img,
-        "spec": spec,
+        "spec": json.dumps(spec),
     }
     images_datauri = {key:pil2datauri(val) for key, val in images.items()}
     return jsonify({**images_datauri})
