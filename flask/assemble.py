@@ -25,12 +25,14 @@ DEFAULT_BAR_TRACK = {
 
 EX_TRACK_INFO = [{'x': 0, 'y': 0, 'width': 400, 'height': 430, 'layout': 'linear', 'mark': 'bar'}, {'x': 0, 'y': 450, 'width': 400, 'height': 430, 'layout': 'linear', 'mark': 'line'}, {'x': 410, 'y': 0, 'width': 400, 'height': 880, 'layout': 'linear', 'mark': 'point'}, {'x': 0, 'y': 890, 'width': 800, 'height': 210, 'layout': 'linear', 'mark': 'area'}, {'x': 0, 'y': 1100, 'width': 800, 'height': 210, 'layout': 'linear', 'mark': 'line'}]
 
-EXTRACTED_INFO_PATH = "../data/extracted"
+# EXTRACTED_INFO_PATH = "../data/extracted" 
+EXTRACTED_INFO_PATH = "/home/ec2-user/manqing/autogosling-tool/model/data/splits/split-42-0.2-0.1/test"
 def create_filenames(example):
     filenames = {
         "box":os.path.join(EXTRACTED_INFO_PATH,"bounding_box",example+".json"),
         "layout":os.path.join(EXTRACTED_INFO_PATH,"layouts",example+".json"),
-        "mark":os.path.join(EXTRACTED_INFO_PATH,"marks",example+".json")
+        "mark":os.path.join(EXTRACTED_INFO_PATH,"chart",example+".json")
+        # "mark":os.path.join(EXTRACTED_INFO_PATH,"marks",example+".json")
     }
     return filenames   
 
@@ -111,14 +113,16 @@ def construct_spec(tracks_info, arrangement):
             "arrangement":arrangement,
             "views":[construct_spec(views,new_arrangement) for views in all_views]
         }
-
-
+EXAMPLE_FILENAME =  "complex_hierarchy_p_7_sw_1_0_s_1_2"
+def generate_spec_from_example(fn=EXAMPLE_FILENAME):
+    test_files = create_filenames(fn)
+    info_structures = read_info(test_files)
+    spec = construct_spec(info_structures,"vertical")
+    return spec
 
 
 if __name__ == "__main__":
-    test_files = create_filenames("complex_hierarchy")
-    infos_structure = read_info(test_files)
-    res = construct_spec(infos_structure,"vertical")
+    res = generate_spec_from_example()    
     print(json.dumps(res))
 
 

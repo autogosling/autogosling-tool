@@ -3,7 +3,7 @@ import logo from './logo.svg';
 import { VIZ_BACKEND_URL } from './Config';
 import './App.css';
 import {GoslingEditorPre, DEFAULT_SPEC} from './GoslingEditorPre';
-import {GoslingComponent} from "gosling.js";
+// import {GoslingComponent} from "gosling.js";
 import {EX_SPEC_BASIC_SEMANTIC_ZOOM} from "./default_specs";
 
 
@@ -19,27 +19,27 @@ function DataResult({ data } : {data : any}) {
       <img src={shape_image} />
       <h6>YoloV7's predictions of the chart's type</h6>
       <img src={property_image} />
+      <GoslingEditorPre spec={JSON.stringify(spec)}/>
       <pre>{JSON.stringify(rest, null, 2)}</pre>
-      <GoslingEditorPre spec={spec}/>
     </div>)
 }
 function App() {
   const [hasData, setHasData] = useState(false)
-  const [data, setData] = useState(null)
+  const [data, setData] = useState()
   const [error, setError] = useState(false)
-  const gosRef = React.useRef(null)
+  // const gosRef = React.useRef(null)
   const handleSubmit = async (e: any) => {
     e.preventDefault()
     const formObject = new FormData(e.currentTarget)
-    alert("submitting!")
+    // alert("submitting!")
     const response = await fetch(VIZ_BACKEND_URL, {
       method: "POST",
       body: formObject
     })
-    setError(!response.ok)
-    const json = response.ok ? await response.json() : null
-    setHasData(true)
+    const json = await response.json()
     setData(json)
+    setError(!response.ok)
+    setHasData(true)
   }
   
 
@@ -54,7 +54,7 @@ function App() {
       </form>
       <br />
       {(hasData && !error) && <DataResult data={data} />}
-      {/* {(hasData && !error) &&<GoslingEditorPre spec={DEFAULT_SPEC}/>} */}
+      {(hasData && !error) &&<GoslingEditorPre spec={DEFAULT_SPEC}/>}
     </div>
   );
 }

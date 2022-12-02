@@ -1,14 +1,14 @@
 from flask import Flask, request, Response, jsonify
 from flask_cors import CORS
 import numpy as np
-import yolov4
+# import yolov4
 from PIL import Image
 import json
 from image_helper import draw_bounding_boxes, get_true_labelled_image
 from yolov7_demo import predict
 import base64
 from io import BytesIO
-from assemble import construct_spec, EX_TRACK_INFO
+from assemble import construct_spec, EXAMPLE_FILENAME, read_info, create_filenames
 
 app = Flask(__name__)
 CORS(app)
@@ -40,8 +40,8 @@ def viz_analysis():
         pil_image = pil_image.convert('RGB')
     shape_img, prop_img = predict(pil_image)
     labelled_true_image = get_true_labelled_image(pil_image,json_labels)
-    tracks_info = EX_TRACK_INFO
     # tracks_info = # Load actual info
+    tracks_info = read_info(create_filenames(EXAMPLE_FILENAME))
     spec = construct_spec(tracks_info,"vertical")
     images = {
         "labelled_image" : labelled_true_image,
@@ -49,9 +49,10 @@ def viz_analysis():
         "property_image" : prop_img,
     }
     response = {key:pil2datauri(val) for key, val in images.items()}
-    response["spec"]=json.dumps(spec)
-    return jsonify({**response})
+    response["spec"]= spec
+    response["tracks_info"]= tracks_info
+    return jsonify(response)
 
 
 print("running app!")
-app.run(host="0.0.0.0",port=5001)
+app.run(host="0.0.0.0",port=5031,debug=False)
