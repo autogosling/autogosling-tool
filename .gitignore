@@ -3,6 +3,7 @@ model/data/**
 
 # Clone of Yolov7 repo
 model/yolov7/**
+model/yolov7
 
 # Detections 
 model/yolov7-trained/runs/detect/**
