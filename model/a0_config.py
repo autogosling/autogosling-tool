@@ -21,5 +21,5 @@ CLASS_FOLDER_NAMES = ["chart","layout","orientation"]
 CLASS_FOLDERS = [folder+"_folder" for folder in CLASS_FOLDER_NAMES]
 BBOX_FOLDER = "bbox_folder"
 IMAGE_FOLDER = "image_folder"
-YOLOV7_LABELS = "labels" # this is the name of the folder that a3-generate-yolov7.py will generate
-YOLOV7_IMAGES = "images" # this is the name of the folder that a3-generate-yolov7.py will generate
+YOLOV7_LABELS = "labels" # this is the name of the folder that a3_generate_yolov7.py will generate
+YOLOV7_IMAGES = "images" # this is the name of the folder that a3_generate_yolov7.py will generate

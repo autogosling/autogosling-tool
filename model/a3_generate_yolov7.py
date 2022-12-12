@@ -1,39 +1,45 @@
 '''
-The script generate-yolov7.py converts our initial data already splitted in train/[label or images or bbox] and test/[label or images or bbox] into a yolov7/images/train and yolov7/images/labels:
+To match the yolov7 input format, this script converts our splitted dataset (e.g., train/[label or images or bbox], valid/[label or images or bbox] and test/[label or images or bbox]) into images/[train or valid or test] and labels/[train or valid or test]:
+Additionally, it creates the labels txt files in the yolov7 format (label x1 x2 y1 y2) where x1 x2 y1 y2 are 
+class
 
-split-42-0.2
-- yolov7
--- images
---- train
----- trainimage01.png
----- ...
---- test
----- testimage01.png
----- ...
--- labels
---- train
----- train01.txt
----- ...
---- test
----- test01.txt
----- ...
+split-42-0.2-0.1
+└─── yolov7-42-0.2-0.1
+     └─── images
+     |    └─── train
+     |    |     └─── trainimage01.png
+     |    |     └─── ...
+     |    └─── test
+     |          └─── testimage01.png
+     |          └─── ...
+     └─── labels
+          └─── train
+          |     └─── train01.txt
+          |     └─── ...
+          └─── test
+                └─── test01.txt
+                └─── ...
 
 GIVEN
 
-└───train
-    │  bbox
-    |  └─── example1.json
-    |  └─── ...
-    |  images
-    |  └─── example1.png
-    |  └─── ...
-    |  label
-    |  └─── example1.json
-    |  └─── ...
-└───test (same structure as train folder)
-    |  bbox
-    |  images
-    |  label
+└─── train
+|    └─── bounding_box
+|    |    └─── example1.json
+|    |    └─── ...
+|    └─── chart
+|    |    └─── example1.json
+|    |    └─── ...
+|    └─── image (screenshot)
+|    |    └─── example1.png
+|    |    └─── ...
+|    └─── layout
+|    |    └─── example1.json
+|    |    └─── ...
+|    └─── orientation
+|         └─── example1.json
+|         └─── ...
+└─── test (same structure as train folder)
+└─── valid (same structure as train folder)
 '''
 
 import os
@@ -46,17 +52,13 @@ from PIL import Image
 from os.path import join as pjoin
 from a0_config import IMAGE_FOLDER, BBOX_FOLDER, CLASS_FOLDERS, split_config, CLASS_FOLDER_NAMES, YOLOV7_LABELS, YOLOV7_IMAGES
 
-
-
 yolov7_config = {
     "split_folder" : "data/splits/split-42-0.2-0.1",
     "output_folder" : "data/splits/split-42-0.2-0.1/yolov7-42-0.2-0.1"
 }
 
-# IMAGE_DIR = Path(split_config)
 IMAGES = Path(split_config[IMAGE_FOLDER]).name
 BBOX = Path(split_config[BBOX_FOLDER]).name
-
 
 def load_mapping(mapping_fn="data/class_mapping.json"):
     with open(mapping_fn,"r") as f:
@@ -97,7 +99,7 @@ def convert_txt(json_path,classes, full_w,full_h):
             cx, cy = x + w/2, y + h/2
         elif "outerRadius" in item: # then it is circular
             cx, cy = item['cx'], item['cy']
-            w = h = item['outerRadius']
+            w = h = item['outerRadius']*2
         else:
             return None
         cx /= full_w

@@ -1,16 +1,8 @@
 # Data used to train model
 model/data/**
 
-# Clone of Yolov7 repo
-model/yolov7/**
-model/yolov7
-
 # Detections 
-model/yolov7-trained/runs/detect/**
-
 best.onnx
-
-yolov4.weights
 model/previews/
 
 

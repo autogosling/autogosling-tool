@@ -1,33 +1,25 @@
 '''
-The script generate-split.py generates a split of the following folder structure (given a seed of 42 and test_size of 20%):
+The script generate-split.py generates a split of the following folder structure (given a seed of 42, a test_size of 20% and a valid_size of 10%):
 
-split-42-0.2
-└───train
-    │  bounding_box
-    |  └─── example1.json
-    |  └─── ...
-    |  chart
-    |  └─── example1.json
-    |  └─── ...
-    |  image
-    |  └─── example1.png
-    |  └─── ...
-    |  layout
-    |  └─── example1.json
-    |  └─── ...
-    |  mark
-    |  └─── example1.json
-    |  └─── ...
-    |  orientation
-    |  └─── example1.json
-    |  └─── ...
-└───test (same structure as train folder)
-    |  bounding_box
-    |  chart
-    |  image
-    |  layout
-    |  mark
-    |  orientation
+split-42-0.2-0.1
+└─── train
+|    └─── bounding_box
+|    |    └─── example1.json
+|    |    └─── ...
+|    └─── chart
+|    |    └─── example1.json
+|    |    └─── ...
+|    └─── image (screenshot)
+|    |    └─── example1.png
+|    |    └─── ...
+|    └─── layout
+|    |    └─── example1.json
+|    |    └─── ...
+|    └─── orientation
+|         └─── example1.json
+|         └─── ...
+└─── test (same structure as train folder)
+└─── valid (same structure as train folder)
 '''
 import os
 from pathlib import Path
@@ -51,12 +43,11 @@ def extract_mapping_ids(folder_path):
     ids = {Path(filename).stem : os.path.join(folder_path,filename) for filename in os.listdir(folder_path)}
     return ids
 
-def generate_folders(output_directory, mode,split_config=split_config):
-    '''Generates 6 folders (bounding boxes, chart, layouts, marks, orientations, screenshot) given a mode "train" or "test"'''
-    # folder_names = ["images", "bbox", "layouts","marks"] # Use line below to generate folder names
-    folder_names = list([Path(path).name for path in split_config.values()])
+def generate_folders(output_directory,mode,split_config=split_config):
+    '''Generates 5 folders (bounding boxes, chart, layouts, orientations, screenshot) given a mode "train" or "test" or "valid"'''
+    folder_names = list([Path(path).name for path in split_config.values()]) # folder_names = ["screenshot", "bounding_box", "layouts","chart","orientations"]
     all_folders = {
-        # this join statement will make a folder called split-42-0.2/train/images for example
+        # this join statement will make a folder called split-42-0.2-0.1/train/images for example
         folder_name : pjoin(output_directory,mode,folder_name) for folder_name in folder_names
     }
     for folder_path in all_folders.values():
@@ -73,14 +64,12 @@ def copy_dataset(output_ids, output_folders,all_mappings_ids):
             copyfile(src_path,output_path)
 
 def create_split(split_config):
-    # folder_paths = [image_folder, bbox_folder, layout_folder,mark_folder] # Use code below to generate folder paths and names
-    # folder_names = ["images", "bbox", "label","marks"]
     folder_paths = list(split_config.values())
     folder_names = [Path(path).name for path in split_config.values()]
     all_mapping_ids_set = {folder_name:extract_mapping_ids(folder_path) for folder_name, folder_path in zip(folder_names, folder_paths)}
     all_ids = [set(mapping_id.keys()) for mapping_id in all_mapping_ids_set.values()]
     common_ids = list(set.intersection(*all_ids))
-    common_ids = [id_string for id_string in common_ids if not id_string.startswith("gene_annotation")]
+    common_ids = [id_string for id_string in common_ids if not id_string.startswith("gene_annotation")] # excluding gene annotation files for now (no bounding boxes)
     train_ids, test_ids = train_test_split(common_ids,test_size=TEST_SIZE)
     train_ids, valid_ids = train_test_split(train_ids,test_size=VALID_SIZE)
     output_directory = f"data/splits/split-{SEED}-{TEST_SIZE}-{VALID_SIZE}"
@@ -93,6 +82,5 @@ def create_split(split_config):
 
 if __name__ == "__main__":
     create_split(split_config)
-    # create_split(**split_configuration)
     print(f"Finished creating split of seed {SEED} and test_size {TEST_SIZE} and valid size {VALID_SIZE}")
     print(f"The data has been created at /data/splits/split-{SEED}-{TEST_SIZE}-{VALID_SIZE}")
