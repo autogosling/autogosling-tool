@@ -9,7 +9,7 @@ from image_helper import draw_bounding_boxes, get_true_labelled_image
 from yolov7_demo import predict
 import base64
 from io import BytesIO
-# from assemble import construct_spec
+from assemble import construct_spec
 
 app = Flask(__name__)
 CORS(app)
@@ -35,12 +35,12 @@ def perform_inference(pil_image):
 @app.route('/viz_analysis',methods=["POST"])
 def viz_analysis():
     image = request.files['image']
-    json_labels = json.load(request.files['json'])
+    # json_labels = json.load(request.files['json'])
     pil_image = Image.open(image)
     if not pil_image.mode == 'RGB':
         pil_image = pil_image.convert('RGB')
     shape_img, prop_img, shape_info, prop_info = predict(pil_image)
-    labelled_true_image = get_true_labelled_image(pil_image,json_labels)
+    # labelled_true_image = get_true_labelled_image(pil_image,json_labels)
     # tracks_info = # Load actual info 
     '''
     Example format: EX_TRACK_INFO = [
@@ -86,11 +86,12 @@ def viz_analysis():
     prop_info_parsed = [parse_list(my_list) for my_list in prop_info]
 
     tracks_info = merge_parsed_list(shape_info_parsed,prop_info_parsed)
-    print(tracks_info)
+    # print(tracks_info)
 
-    # spec = construct_spec(tracks_info,"vertical")
+    
+    spec = construct_spec(tracks_info,"vertical")
     images = {
-        "labelled_image" : labelled_true_image,
+    #    "labelled_image" : labelled_true_image,
         "shape_image" : shape_img,
         "property_image" : prop_img,
     }
@@ -98,7 +99,7 @@ def viz_analysis():
     response["spec"]= spec
     response["tracks_info"]= tracks_info
     return jsonify(response)
-
+    
 
 print("running app!")
 app.run(host="0.0.0.0",port=7777,debug=False)

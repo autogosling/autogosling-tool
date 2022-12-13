@@ -49,8 +49,8 @@ function App() {
       <p>Upload your image here:</p>
       <form onSubmit={handleSubmit}>
         <input type="file" name="image" id="image" />
-        <input type="file" name="json" id="image" />
-        <button type="submit">Submit image and labels</button>
+        {/* <input type="file" name="json" id="image" /> */}
+        <button type="submit">Submit image</button>
       </form>
       <br />
       {(hasData && !error) && <DataResult data={data} />}
