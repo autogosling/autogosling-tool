@@ -89,8 +89,8 @@ def predict(img):
   scores = [el[-1] for el in outputs]
   bboxes = [el[1:5] for el in outputs]
   def make_image(class_set):
+    important_info = []
     ori_images = [img.copy()]
-
     for i,(batch_id,x0,y0,x1,y1,cls_id,score) in enumerate(outputs):
         image = ori_images[int(batch_id)]
         box = np.array([x0,y0,x1,y1])
@@ -105,12 +105,12 @@ def predict(img):
           name += ' '+str(score)
           cv2.rectangle(image,box[:2],box[2:],color,2)
           cv2.putText(image,name,(box[0], box[1] - 2),cv2.FONT_HERSHEY_SIMPLEX,0.75,color,thickness=2)  
-
-    return Image.fromarray(ori_images[0])
-  shape_image = make_image(["linear","circular"])
-  other_image = make_image([el for el in classes if el not in ['linear','circular']])
+          important_info.append((classes[cls_id],x0,y0,x1,y1,cls_id,score))
+    return Image.fromarray(ori_images[0]), important_info
+  shape_image, shape_info = make_image(["linear","circular"])
+  other_image, other_info = make_image([el for el in classes if el not in ['linear','circular']])
   # return bboxes, scores
-  return shape_image, other_image
+  return shape_image, other_image, shape_info, other_info
 
 
 # From YOLOv4 bounding boxes tutorial

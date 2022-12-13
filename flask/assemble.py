@@ -26,7 +26,7 @@ DEFAULT_BAR_TRACK = {
 EX_TRACK_INFO = [{'x': 0, 'y': 0, 'width': 400, 'height': 430, 'layout': 'linear', 'mark': 'bar'}, {'x': 0, 'y': 450, 'width': 400, 'height': 430, 'layout': 'linear', 'mark': 'line'}, {'x': 410, 'y': 0, 'width': 400, 'height': 880, 'layout': 'linear', 'mark': 'point'}, {'x': 0, 'y': 890, 'width': 800, 'height': 210, 'layout': 'linear', 'mark': 'area'}, {'x': 0, 'y': 1100, 'width': 800, 'height': 210, 'layout': 'linear', 'mark': 'line'}]
 
 # EXTRACTED_INFO_PATH = "../data/extracted" 
-EXTRACTED_INFO_PATH = "/home/ec2-user/manqing/autogosling-tool/model/data/splits/split-42-0.2-0.1/test"
+EXTRACTED_INFO_PATH = "/new_mem/manqing/autogosling-tool/model/data/splits/split-42-0.2-0.1/test"
 def create_filenames(example):
     filenames = {
         "box":os.path.join(EXTRACTED_INFO_PATH,"bounding_box",example+".json"),
@@ -117,6 +117,7 @@ EXAMPLE_FILENAME =  "complex_hierarchy_p_7_sw_1_0_s_1_2"
 def generate_spec_from_example(fn=EXAMPLE_FILENAME):
     test_files = create_filenames(fn)
     info_structures = read_info(test_files)
+    print(info_structures)
     spec = construct_spec(info_structures,"vertical")
     return spec
 
