@@ -1,7 +1,6 @@
 '''
 To match the yolov7 input format, this script converts our splitted dataset (e.g., train/[label or images or bbox], valid/[label or images or bbox] and test/[label or images or bbox]) into images/[train or valid or test] and labels/[train or valid or test]:
-Additionally, it creates the labels txt files in the yolov7 format (label x1 x2 y1 y2) where x1 x2 y1 y2 are 
-class
+Additionally, it creates the labels txt files in the yolov7 format (label x1 x2 y1 y2) where x1 x2 y1 y2 are the 
 
 split-42-0.2-0.1
 └─── yolov7-42-0.2-0.1
@@ -120,6 +119,14 @@ def write_txt(fn,content):
     with open(fn,"w") as f:
         f.write(content)
 
+def flatten_list(mylist):
+    for el in mylist:
+        if type(el) == list:
+            for new_el in flatten_list(el):
+                yield new_el
+        else:
+            yield el
+
 def read_classes(stem_path,split_folder,mode):
 
     def gather_classes_json(folder):
@@ -131,7 +138,7 @@ def read_classes(stem_path,split_folder,mode):
         return classes
 
     def convert_list(class_list):
-        return [CLASS_MAPPING[class_el] for class_el in class_list]
+        return [CLASS_MAPPING[class_el] for class_el in flatten_list(class_list)]
     
     all_classes = [gather_classes_json(folder) for folder in CLASS_FOLDER_NAMES]
     return [convert_list(class_list) for class_list in zip(*all_classes)] 

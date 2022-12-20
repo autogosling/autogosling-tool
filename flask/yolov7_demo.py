@@ -34,6 +34,7 @@ import numpy as np
 
 cuda = True
 w = "./best.onnx"
+# w = "./best_backup.onnx"
 
 providers = ['CUDAExecutionProvider', 'CPUExecutionProvider'] if cuda else ['CPUExecutionProvider']
 session = ort.InferenceSession(w, providers=providers)
@@ -67,7 +68,7 @@ def letterbox(im, new_shape=(640, 640), color=(0, 0, 0), auto=True, scaleup=True
     im = cv2.copyMakeBorder(im, top, bottom, left, right, cv2.BORDER_CONSTANT, value=color)  # add border
     return im, r, (dw, dh)
 
-classes = ['area','bar','circular','header','linear','point','rect','withinLink']
+classes = ['area','bar','brush','circular','heatmap','line','linear','point','rect','rule','text','triangleBottom','triangleLeft','triangleRight','withinLink']
 # colors = {name:[random.randint(0, 255) for _ in range(3)] for i,name in enumerate(names)} # names are classes
 colors = {name : PIL.ImageColor.getrgb(f'hsv({int(360 * i / len(classes))},100%,100%)') for i, name in enumerate(classes)}
 
@@ -104,7 +105,7 @@ def predict(img):
         if name in class_set:
           name += ' '+str(score)
           cv2.rectangle(image,box[:2],box[2:],color,2)
-          cv2.putText(image,name,(box[0], box[1] - 2),cv2.FONT_HERSHEY_SIMPLEX,0.75,color,thickness=2)  
+          cv2.putText(image,name,(box[0], box[1] + 25),cv2.FONT_HERSHEY_SIMPLEX,0.75,color,thickness=2)  
           important_info.append((classes[cls_id],x0,y0,x1,y1,cls_id,score))
     return Image.fromarray(ori_images[0]), important_info
   shape_image, shape_info = make_image(["linear","circular"])

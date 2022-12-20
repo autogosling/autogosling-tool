@@ -1,4 +1,5 @@
 import cv2
+import PIL
 import time
 import requests
 import random
@@ -43,10 +44,10 @@ def letterbox(im, new_shape=(640, 640), color=(114, 114, 114), auto=True, scaleu
     im = cv2.copyMakeBorder(im, top, bottom, left, right, cv2.BORDER_CONSTANT, value=color)  # add border
     return im, r, (dw, dh)
 
-mapping = {"area": 0, "bar": 1, "circular": 2, "header": 3, "linear": 4, "point": 5, "rect": 6, "withinLink": 7}
+mapping = {"area": 0, "bar": 1, "brush": 2, "circular": 3, "heatmap": 4, "horizontal": 5, "line": 6, "linear": 7, "point": 8, "rect": 9, "rule": 10, "text": 11, "triangleBottom": 12, "triangleLeft": 13, "triangleRight": 14, "vertical": 15, "withinLink": 16}
 names = list(mapping.keys())
-colors = {name:[random.randint(0, 255) for _ in range(3)] for i,name in enumerate(names)}
 
+colors = {name : PIL.ImageColor.getrgb(f'hsv({int(360 * i / len(names))},100%,100%)') for i, name in enumerate(names)}
 
 def process_image(img_path):
   img = cv2.imread(img_path)
@@ -88,3 +89,9 @@ def display_output(img_path):
       cv2.putText(image,name,((box[0]+box[2])//2, int((random.random()-0.5) * 100) + (box[1]+box[3])//2),cv2.FONT_HERSHEY_SIMPLEX,0.75,[0, 0, 0],thickness=2)  
 
   return Image.fromarray(ori_images[0])
+
+if __name__ == "__main__":
+    filename = "test.png"
+    img = display_output(filename)
+    savepath = f"prediction-{filename}"
+    img.save(savepath)

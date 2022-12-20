@@ -2,6 +2,7 @@
 model/data/**
 
 # Detections 
+best_backup.onnx
 best.onnx
 model/previews/
 

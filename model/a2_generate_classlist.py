@@ -2,9 +2,9 @@
 Generates a list of all unique labels
 
 Output: 
-class_category_list.json: 
-class_list.json
-class_list.txt
+class_category_list.json: {"category1": ["class1", "class2", ...], "category2", ["class3", "class4"], ...}
+class_list.json: ["class1", "class2", "class3", ....]
+class_list.txt: class1 class2 class3 ...
 class_mapping.json
 '''
 
@@ -15,13 +15,22 @@ from a0_config import split_config, CLASS_FOLDERS, CLASS_FOLDER_NAMES
 
 class_vocab_set = set()
 
+def flatten_list(mylist):
+    if len(mylist) == 0:
+        return []
+    elif len(mylist) >= 1:
+        if type(mylist[0]) == list:
+            return [str(el) for el_list in mylist for el in el_list if el is not None]
+        else:
+            return [str(el) for el in mylist]
+
 def update_class_vocab(class_vocab_set,directory):
     for fn in os.listdir(directory):
         complete_path = pjoin(directory,fn)
         data = []
         with open(complete_path,"r") as f:
             data = json.load(f)
-        data_strs = [str(el) for el in data if el is not None]
+        data_strs = flatten_list(data)
         class_vocab_set.update(data_strs)
     return list(sorted(class_vocab_set))
 
