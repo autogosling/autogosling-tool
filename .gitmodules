@@ -1,3 +1,4 @@
 [submodule "yolov7"]
 	path = yolov7
+	branch = main
 	url = https://github.com/autogosling/yolov7.git
