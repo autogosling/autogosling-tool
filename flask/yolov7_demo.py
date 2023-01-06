@@ -68,7 +68,7 @@ def letterbox(im, new_shape=(640, 640), color=(0, 0, 0), auto=True, scaleup=True
     im = cv2.copyMakeBorder(im, top, bottom, left, right, cv2.BORDER_CONSTANT, value=color)  # add border
     return im, r, (dw, dh)
 
-classes = ['area','bar','brush','circular','heatmap','line','linear','point','rect','rule','text','triangleBottom','triangleLeft','triangleRight','withinLink']
+classes = ["area", "bar", "brush", "circular", "heatmap", "horizontal", "line", "linear", "point", "rect", "rule", "text", "triangleBottom", "triangleLeft", "triangleRight", "vertical", "withinLink"] # class names
 # colors = {name:[random.randint(0, 255) for _ in range(3)] for i,name in enumerate(names)} # names are classes
 colors = {name : PIL.ImageColor.getrgb(f'hsv({int(360 * i / len(classes))},100%,100%)') for i, name in enumerate(classes)}
 

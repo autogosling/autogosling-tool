@@ -8,6 +8,8 @@ import onnxruntime as ort
 from PIL import Image
 from pathlib import Path
 from collections import OrderedDict,namedtuple
+from PIL import Image, ImageDraw, ImageColor
+import PIL.ImageColor
 # import cv2
 cuda = False
 w = "best.onnx"

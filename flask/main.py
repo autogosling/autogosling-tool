@@ -130,8 +130,15 @@ def viz_analysis():
     shape_info_parsed = select_best_from_identical_boxes([parse_list(my_list) for my_list in shape_info])
     prop_info_parsed = merge_identical_boxes([parse_list(my_list) for my_list in prop_info])
 
-
-    tracks_info = merge_parsed_list(shape_info_parsed,prop_info_parsed)
+    def add_orientation(info):
+        new_obj = info.copy()
+        orientation_set = {"horizontal","vertical"}
+        new_obj['orientation'] = [el for el in info['mark'] if el in orientation_set]
+        new_obj['mark'] = [el for el in info['mark'] if el not in orientation_set]
+        return new_obj
+    raw_tracks_info = merge_parsed_list(shape_info_parsed,prop_info_parsed)
+    tracks_info = [add_orientation(info) for info in raw_tracks_info]
+    # import ipdb; ipdb.set_trace()
     print(tracks_info)
 
     # '''
