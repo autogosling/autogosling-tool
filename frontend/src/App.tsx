@@ -54,7 +54,6 @@ function App() {
       </form>
       <br />
       {(hasData && !error) && <DataResult data={data} />}
-      {(hasData && !error) &&<GoslingEditorPre spec={DEFAULT_SPEC}/>}
     </div>
   );
 }
