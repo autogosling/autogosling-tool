@@ -151,7 +151,7 @@ def construct_spec(track_infos, arrangement):
         curr_view = [y_sorted_infos[0]]
         for info in y_sorted_infos[1:]:
             new_y_low, new_y_high = get_bbox_ys(info)
-            if new_y_low >= curr_y_high:
+            if new_y_low >= curr_y_high-5:
                 all_views.append(curr_view)
                 curr_view = [info]
                 curr_y_high = new_y_high
@@ -177,7 +177,7 @@ def construct_spec(track_infos, arrangement):
         curr_view = [x_sorted_infos[0]]
         for info in x_sorted_infos[1:]:
             new_x_low, new_x_high = get_bbox_xs(info)
-            if new_x_low >= curr_x_high:
+            if new_x_low >= curr_x_high-5:
                 all_views.append(curr_view)
                 curr_view = [info]
                 curr_x_high = new_x_high
