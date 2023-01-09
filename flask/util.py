@@ -55,7 +55,7 @@ def merge_identical_boxes(all_boxes,threshold=0.9):
         initial_obj = boxes[0].copy()
         all_classes = [box['class'] for box in boxes if box['score'] > threshold]
         if len(all_classes) == 1:
-            initial_obj['class'] = all_classes[0]
+            initial_obj['class'] = [all_classes[0]]
         else:
             initial_obj['class'] = all_classes
         return initial_obj

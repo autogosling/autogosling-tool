@@ -4,23 +4,20 @@ import { VIZ_BACKEND_URL } from './Config';
 import './App.css';
 import {GoslingEditorPre, DEFAULT_SPEC} from './GoslingEditorPre';
 // import {GoslingComponent} from "gosling.js";
+import GoslingSketch from "./GoslingSketch"
 import {EX_SPEC_BASIC_SEMANTIC_ZOOM} from "./default_specs";
 
 
 
 function DataResult({ data } : {data : any}) {
-  const { labelled_image, shape_image, property_image, spec, ...rest } = data
+  const {tracks_info : tracksInfo, image, spec, width, height} = data
   return (
     <div>
-      <h3>Viz Analysis Results</h3>
-      <h6>Labelled Image (from JSON)</h6>
-      <img src={labelled_image} />
-      <h6>YoloV7's predictions of the charts' shape</h6>
-      <img src={shape_image} />
-      <h6>YoloV7's predictions of the chart's type</h6>
-      <img src={property_image} />
+      <h2>YoloV7's predictions of the charts' shape</h2>
+      {/* <img src={image} /> */}
+      <GoslingSketch image={image} tracksInfo={tracksInfo} width={width} height={height}/>
       <GoslingEditorPre spec={JSON.stringify(spec)}/>
-      <pre>{JSON.stringify(rest, null, 2)}</pre>
+      <pre>{JSON.stringify(tracksInfo, null, 2)}</pre>
     </div>)
 }
 function App() {

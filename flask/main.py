@@ -41,7 +41,7 @@ def viz_analysis():
     pil_image = Image.open(image)
     if not pil_image.mode == 'RGB':
         pil_image = pil_image.convert('RGB')
-    shape_img, prop_img, shape_info, prop_info = predict(pil_image)
+    shape_img, _, shape_info, prop_info = predict(pil_image)
     # labelled_true_image = get_true_labelled_image(pil_image,json_labels)
     # tracks_info = # Load actual info 
     '''
@@ -59,6 +59,8 @@ def viz_analysis():
         new_obj = info.copy()
         orientation_set = {"horizontal","vertical"}
         new_obj['orientation'] = [el for el in info['mark'] if el in orientation_set]
+        if len(new_obj['orientation']) == 0:
+            new_obj['orientation'] = ['horizontal']
         new_obj['mark'] = [el for el in info['mark'] if el not in orientation_set]
         return new_obj
     raw_tracks_info = merge_parsed_list(shape_info_parsed,prop_info_parsed)
@@ -70,12 +72,15 @@ def viz_analysis():
     spec = construct_spec(tracks_info,"vertical")
     images = {
     #    "labelled_image" : labelled_true_image,
-        "shape_image" : shape_img,
-        "property_image" : prop_img,
+        "image" : shape_img,
+        # "property_image" : prop_img,
     }
+    width, height = shape_img.size
     response = {key:pil2datauri(val) for key, val in images.items()}
     response["spec"]= spec
     response["tracks_info"]= tracks_info
+    response["width"] = width
+    response["height"] = height
     return jsonify(response)
     # '''
 
