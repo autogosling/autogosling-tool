@@ -1,52 +1,24 @@
-import copy 
+import copy
 import json
 import os
+import marker
 
-DEFAULT_DATA = {
-        "url": "https://resgen.io/api/v1/tileset_info/?d=UvVPeLHuRDiYA3qwFlm7xQ",
-        "type": "multivec",
-        "row": "sample",
-        "column": "position",
-        "value": "peak",
-        "categories": ["sample 1"],
-        "binSize": 5
-    }
 
-DEFAULT_SUB_TRACK = {
-    "mark": "bar",
-}
-DEFAULT_TRACK = {
-    "width": 800,
-    "height": 180,
-    "data": {
-        "url": "https://resgen.io/api/v1/tileset_info/?d=UvVPeLHuRDiYA3qwFlm7xQ",
-        "type": "multivec",
-        "row": "sample",
-        "column": "position",
-        "value": "peak",
-        "categories": ["sample 1"],
-        "binSize": 5
-    },
-    "layout": "linear",
-    "x": {"field": "start", "type": "genomic", "axis": "bottom"},
-    "xe": {"field": "end", "type": "genomic"},
-    "y": {"field": "peak", "type": "quantitative", "axis": "right"},
-    "row": {"field": "sample", "type": "nominal"},
-    "size": {"value": 5}
-}
+EX_TRACK_INFO = [{'x': 0, 'y': 0, 'width': 400, 'height': 430, 'layout': 'linear', 'mark': 'bar'}, {'x': 0, 'y': 450, 'width': 400, 'height': 430, 'layout': 'linear', 'mark': 'line'}, {'x': 410, 'y': 0, 'width': 400,
+                                                                                                                                                                                         'height': 880, 'layout': 'linear', 'mark': 'point'}, {'x': 0, 'y': 890, 'width': 800, 'height': 210, 'layout': 'linear', 'mark': 'area'}, {'x': 0, 'y': 1100, 'width': 800, 'height': 210, 'layout': 'linear', 'mark': 'line'}]
 
-EX_TRACK_INFO = [{'x': 0, 'y': 0, 'width': 400, 'height': 430, 'layout': 'linear', 'mark': 'bar'}, {'x': 0, 'y': 450, 'width': 400, 'height': 430, 'layout': 'linear', 'mark': 'line'}, {'x': 410, 'y': 0, 'width': 400, 'height': 880, 'layout': 'linear', 'mark': 'point'}, {'x': 0, 'y': 890, 'width': 800, 'height': 210, 'layout': 'linear', 'mark': 'area'}, {'x': 0, 'y': 1100, 'width': 800, 'height': 210, 'layout': 'linear', 'mark': 'line'}]
-
-# EXTRACTED_INFO_PATH = "../data/extracted" 
+# EXTRACTED_INFO_PATH = "../data/extracted"
 EXTRACTED_INFO_PATH = "/new_mem/manqing/autogosling-tool/model/data/splits/split-42-0.2-0.1/test"
+
+
 def create_filenames(example):
     filenames = {
-        "box":os.path.join(EXTRACTED_INFO_PATH,"bounding_box",example+".json"),
-        "layout":os.path.join(EXTRACTED_INFO_PATH,"layouts",example+".json"),
-        "mark":os.path.join(EXTRACTED_INFO_PATH,"chart",example+".json")
-        # "mark":os.path.join(EXTRACTED_INFO_PATH,"marks",example+".json")
+        "box": os.path.join(EXTRACTED_INFO_PATH, "bounding_box", example+".json"),
+        "layout": os.path.join(EXTRACTED_INFO_PATH, "layouts", example+".json"),
+        "mark": os.path.join(EXTRACTED_INFO_PATH, "chart", example+".json"),
+        "orientation": os.path.join(EXTRACTED_INFO_PATH, "orientations", example+".json"),
     }
-    return filenames   
+    return filenames
 
 
 def read_info(filenames):
@@ -78,8 +50,7 @@ def read_info(filenames):
 
 
 def create_track(track_info):
-    new_track = copy.deepcopy(DEFAULT_TRACK)
-    new_sub_track = copy.deepcopy(DEFAULT_SUB_TRACK)
+    new_track = marker.get_default_track(track_info["mark"])
 
     new_track["layout"] = track_info["layout"]
     new_track["width"] = track_info["width"]
@@ -89,36 +60,38 @@ def create_track(track_info):
 
     if len(track_info["mark"]) == 1:
         new_track["alignment"] = "overlay"
-        new_sub_track["mark"] = track_info["mark"][0]
-        new_track["tracks"].append(new_sub_track)
+        new_sub_track = marker.get_default_subtrack(track_info["mark"][0])
+        if new_sub_track != None:
+            new_track["tracks"].append(new_sub_track)
     else:
         new_track["alignment"] = "overlay"
         for m in track_info["mark"]:
-            new_track_mark = copy.deepcopy(new_sub_track)
-            new_track_mark["mark"] = m
-            new_track["tracks"].append(new_track_mark)
+            new_sub_track = marker.get_default_subtrack(m)
+            if new_sub_track != None:
+                new_track["tracks"].append(new_sub_track)
     return new_track
 
-def get_height(layout,curr_height,prev_height=0):
+
+def get_height(layout, curr_height, prev_height=0):
     if layout == "linear":
         return curr_height-prev_height
     elif layout == "circular":
         return (curr_height-prev_height)/2
 
-def create_circular_stack_view(track_infos,default_center=0.3):
+
+def create_circular_stack_view(track_infos, default_center=0.3):
     new_view = {}
     new_view["alignment"] = "stack"
     new_view["layout"] = "circular"
     new_view["tracks"] = []
-    sorted_infos = sorted(track_infos,key=lambda x:x["width"])
+    sorted_infos = sorted(track_infos, key=lambda x: x["width"])
     width = sorted_infos[-1]["width"]
     x = sorted_infos[-1]["x"]
     y = sorted_infos[-1]["y"]
     prev_height = width*default_center
     for track in sorted_infos:
         new_height = track["height"]
-        print(new_height,prev_height)
-        track["height"] = get_height(track["layout"],new_height,prev_height)
+        track["height"] = get_height(track["layout"], new_height, prev_height)
         track["width"] = width
         track["x"] = x
         track["y"] = y
@@ -126,6 +99,7 @@ def create_circular_stack_view(track_infos,default_center=0.3):
         prev_height = new_height
     new_view["tracks"].reverse()
     return new_view
+
 
 def create_views(track_infos):
     if len(track_infos) == 1:
@@ -137,8 +111,10 @@ def create_views(track_infos):
 def get_bbox_xs(track_info):
     return track_info["x"], track_info["x"]+track_info["width"]
 
+
 def get_bbox_ys(track_info):
     return track_info["y"], track_info["y"]+track_info["height"]
+
 
 def construct_spec(track_infos, arrangement):
     if len(track_infos) == 1:
@@ -159,16 +135,10 @@ def construct_spec(track_infos, arrangement):
                 curr_view.append(info)
                 curr_y_high = max(curr_y_high, new_y_high)
         all_views.append(curr_view)
-        if len(all_views) == 1:
-            return {
-                "arrangement": arrangement,
-                "views": [create_views(all_views[0])]
-            }
-        else:
-            return {
-                "arrangement": arrangement,
-                "views": [construct_spec(views, new_arrangement) for views in all_views]
-            }
+        return {
+            "arrangement": arrangement,
+            "views": [construct_spec(views, new_arrangement) for views in all_views]
+        }
     elif arrangement == "horizontal":
         new_arrangement = "vertical"
         x_sorted_infos = sorted(track_infos, key=get_bbox_xs)
@@ -185,27 +155,29 @@ def construct_spec(track_infos, arrangement):
                 curr_view.append(info)
                 curr_x_high = max(curr_x_high, new_x_high)
         all_views.append(curr_view)
-        if len(all_views) == 1:
-            return {
-                "arrangement": arrangement,
-                "views": [create_views(all_views[0])]
-            }
-        else:
-            return {
-                "arrangement": arrangement,
-                "views": [construct_spec(views, new_arrangement) for views in all_views]
-            }
-EXAMPLE_FILENAME =  "complex_hierarchy_p_7_sw_1_0_s_1_2"
+    if len(all_views) == 1:
+        return {
+            "arrangement": arrangement,
+            "views": [create_views(all_views[0])]
+        }
+    else:
+        return {
+            "arrangement": arrangement,
+            "views": [construct_spec(views, new_arrangement) for views in all_views]
+        }
+
+
+EXAMPLE_FILENAME = "complex_hierarchy_p_7_sw_1_0_s_1_2"
+
+
 def generate_spec_from_example(fn=EXAMPLE_FILENAME):
     test_files = create_filenames(fn)
     info_structures = read_info(test_files)
     print(info_structures)
-    spec = construct_spec(info_structures,"vertical")
+    spec = construct_spec(info_structures, "vertical")
     return spec
 
 
 if __name__ == "__main__":
-    res = generate_spec_from_example()    
+    res = generate_spec_from_example()
     print(json.dumps(res))
-
-
