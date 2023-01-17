@@ -16,11 +16,15 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
+// import { PredictionTable } from './GoslingTable';
 
 function DataResult({ data, step }: { data: any, step: Number }) {
   const { tracks_info: tracksInfo, image, spec, width, height } = data
   if (step === 0) {
-    return <GoslingSketch image={image} tracksInfo={tracksInfo} width={width} height={height} />
+    return <div>
+      <GoslingSketch image={image} tracksInfo={tracksInfo} width={width} height={height} />
+      {/*<PredictionTable tracksInfo={tracksInfo}></PredictionTable>*/}
+      </div>
   }
   if (step === 1) {
     return <GoslingEditorPre spec={JSON.stringify(spec)} />;

@@ -7,18 +7,19 @@ let p5Image;
 
 
 const drawBoxes = (p5,tracksInfo) => {
-    p5.stroke(200,20,20)
     for (const trackInfo of tracksInfo){
         p5.noFill()
         const {x,y,width, height, layout, mark, orientation} = trackInfo
+        p5.stroke(71,102,196)
         p5.strokeWeight(4)
         p5.rect(x,y,width,height)
         const message = `Layout: ${layout}\nType: ${mark}\nOrientation: ${orientation}`
-        p5.noStroke()
-        p5.fill(255,255,255)
+        // p5.noStroke()
+        p5.fill(225,245,244)
         p5.rect(x,y,300,80)
-        p5.strokeWeight(1)
-        p5.fill(200,20,20)
+        p5.strokeWeight(0)
+        p5.fill(71,102,196)
+        p5.stroke(71,102,196)
         p5.textSize(20)
         p5.text(message,x+10,y+20)
 

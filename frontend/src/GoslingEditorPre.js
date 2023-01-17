@@ -55,6 +55,13 @@ export const stripJsonComments = (data) => {
     return JSON.parse(newData)
 }
 
+
+const prettifySpec = (spec) => {
+    let data = JSON.parse(spec);
+    return JSON.stringify(data, null, 2);
+}
+
+
 const updateTheme = (isDarkTheme, editor) => {
     editor.defineTheme(
         'gosling',
@@ -93,7 +100,7 @@ class GoslingEditorPre extends React.Component {
     constructor(prop) {
         super(prop);
         this.state = {
-            code: this.props.spec,
+            code: prettifySpec(this.props.spec),
             spec: stripJsonComments(this.props.spec),
             log: { state: 'success', message: '' },
             isDarkTheme: false
@@ -109,9 +116,9 @@ class GoslingEditorPre extends React.Component {
         try {
             const spec = stripJsonComments(code)
             const validateInfo = validateGoslingSpec(spec)
-  
+
             if (validateInfo.state = 'success') {
-                
+
                 this.setState({
                     spec,
                     code,
@@ -127,7 +134,7 @@ class GoslingEditorPre extends React.Component {
             })
         }
     }
-    
+
 
     reset() {
         this.setState({ spec: stripJsonComments(this.props.spec), code: this.props.spec })
@@ -146,7 +153,7 @@ class GoslingEditorPre extends React.Component {
                     className='gosling-component'
                 />
             </div>
-            <div className='codeContainer' style={{ position: "relative", width: "50%"}}>
+            <div className='codeContainer' style={{ position: "relative", width: "50%" }}>
                 <MonacoEditor
                     height={500}
                     width='100%'
@@ -160,9 +167,9 @@ class GoslingEditorPre extends React.Component {
                 <div className={`compile-message compile-message-${log.state}`}>{log.message}</div>
                 <button type="button" className='float-button' onClick={this.reset}>Reset</button>
             </div>
-            
+
         </div>
     }
 }
 
-export {GoslingEditorPre};
+export { GoslingEditorPre };

@@ -13,3 +13,19 @@ running app!
  * Debug mode: off
 Address already in use
 Port 5001 is in use by another program. Either identify and stop that program, or start the server with a different port.
+Python version: 3.8.15 | packaged by conda-forge | (default, Nov 22 2022, 08:49:35) 
+[GCC 10.4.0], sys.version_info(major=3, minor=8, micro=15, releaselevel='final', serial=0) 
+Pytorch version: 1.13.0+cu117 
+running app!
+ * Serving Flask app 'main'
+ * Debug mode: off
+Address already in use
+Port 7777 is in use by another program. Either identify and stop that program, or start the server with a different port.
+Python version: 3.8.15 | packaged by conda-forge | (default, Nov 22 2022, 08:49:35) 
+[GCC 10.4.0], sys.version_info(major=3, minor=8, micro=15, releaselevel='final', serial=0) 
+Pytorch version: 1.13.0+cu117 
+running app!
+ * Serving Flask app 'main'
+ * Debug mode: off
+Address already in use
+Port 7777 is in use by another program. Either identify and stop that program, or start the server with a different port.
