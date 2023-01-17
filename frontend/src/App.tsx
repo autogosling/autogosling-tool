@@ -16,14 +16,16 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-// import { PredictionTable } from './GoslingTable';
+import { PredictionTable } from './GoslingTable';
 
 function DataResult({ data, step }: { data: any, step: Number }) {
   const { tracks_info: tracksInfo, image, spec, width, height } = data
+
+  const [currentTracksInfo, setCurrentTracksInfo] = useState(tracksInfo)
   if (step === 0) {
     return <div>
-      <GoslingSketch image={image} tracksInfo={tracksInfo} width={width} height={height} />
-      {/*<PredictionTable tracksInfo={tracksInfo}></PredictionTable>*/}
+      <GoslingSketch image={image} tracksInfo={currentTracksInfo} width={width} height={height} />
+      <PredictionTable currentTracksInfo={currentTracksInfo} setCurrentTracksInfo={setCurrentTracksInfo}></PredictionTable>
       </div>
   }
   if (step === 1) {
