@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
 import { VIZ_BACKEND_URL } from './Config';
 import './App.css';
-import {GoslingEditorPre, DEFAULT_SPEC} from './GoslingEditorPre';
+import { GoslingEditorPre, DEFAULT_SPEC } from './GoslingEditorPre';
 // import {GoslingComponent} from "gosling.js";
 import GoslingSketch from "./GoslingSketch"
-import {EX_SPEC_BASIC_SEMANTIC_ZOOM} from "./default_specs";
+import { EX_SPEC_BASIC_SEMANTIC_ZOOM } from "./default_specs";
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -17,13 +17,13 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
-function DataResult({ data, step } : {data : any, step : Number}) {
-  const {tracks_info : tracksInfo, image, spec, width, height} = data
+function DataResult({ data, step }: { data: any, step: Number }) {
+  const { tracks_info: tracksInfo, image, spec, width, height } = data
   if (step === 0) {
-    return       <GoslingSketch image={image} tracksInfo={tracksInfo} width={width} height={height}/>
+    return <GoslingSketch image={image} tracksInfo={tracksInfo} width={width} height={height} />
   }
   if (step === 1) {
-    return <GoslingEditorPre spec={JSON.stringify(spec)}/>;
+    return <GoslingEditorPre spec={JSON.stringify(spec)} />;
   }
   return (
     <div>
@@ -32,17 +32,15 @@ function DataResult({ data, step } : {data : any, step : Number}) {
       <pre>{JSON.stringify(tracksInfo, null, 2)}</pre>
     </div>)
 }
+
 function App() {
   const [hasData, setHasData] = useState(false)
   const [data, setData] = useState()
   const [error, setError] = useState(false)
   const [activeStep, setActiveStep] = useState(0)
-  
-  
-  // const gosRef = React.useRef(null)
-  const handleSubmit = async (e: any) => {
-    e.preventDefault()
-    const formObject = new FormData(e.currentTarget)
+
+  const handleFile = async (e: any) => {
+    const formObject = new FormData(e.target.form)
     // alert("submitting!")
     const response = await fetch(VIZ_BACKEND_URL, {
       method: "POST",
@@ -53,42 +51,51 @@ function App() {
     setError(!response.ok)
     setHasData(true)
   }
-  
+
   const handleNavigation = () => {
     setActiveStep((prevActiveStep) => prevActiveStep === 0 ? 1 : 0);
   }
 
   return (
     <div className="App">
-      <h1>Autogosling Frontend</h1>
-      <p>Upload your image here:</p>
-      <form onSubmit={handleSubmit}>
-        <input type="file" name="image" id="image" />
-        {/* <input type="file" name="json" id="image" /> */}
-        <button type="submit">Submit image</button>
-      </form>
-      <Box sx={{ width: '100%' }}>
-        <Stepper activeStep={activeStep}>
-
-          <Step key={0}>
-            <Typography>
-              <StepLabel>Detection</StepLabel>
-            </Typography>
-          </Step>
-          <Step key={1}>
-          <Typography>
-              <StepLabel>Reconstruction</StepLabel>
-            </Typography>
-          </Step>
-        </Stepper>
-        
-        <Button onClick={handleNavigation}>
-          {activeStep === 1 ? 'Back' : 'Next'}
-        </Button>
+      <Typography>
+        <h1 className="page-title">AutoGosling</h1>
+      </Typography>
+      <Box className="setup">
+        <Box className="uploadBox" sx={{ width: '100%' }}>
+          <form>
+            <Button variant="contained" component="label">Choose image to analyze
+              <input type="file" name="image" id="image" hidden onChange={handleFile} />
+            </Button>
+          </form>
+        </Box>
       </Box>
-      <br />
-      {(hasData && !error) && <DataResult data={data} step={activeStep} />}
-    </div>
+      {(hasData && !error) && <Box className="results" sx={{ width: '100%' }}>
+        <Box sx={{ width: '100%' }}>
+          <Stepper activeStep={activeStep}>
+
+            <Step key={0}>
+              <Typography>
+                <StepLabel>Detection</StepLabel>
+              </Typography>
+            </Step>
+            <Step key={1}>
+              <Typography>
+                <StepLabel>Reconstruction</StepLabel>
+              </Typography>
+            </Step>
+          </Stepper>
+
+        </Box>
+        <Box className="stepper-buttons">
+          <Box style={{flex: "1 1 auto"}} hidden={activeStep===1}></Box>
+          <Button variant="contained" onClick={handleNavigation}>
+            {activeStep === 1 ? 'Back' : 'Next'}
+          </Button>
+        </Box>
+        <DataResult data={data} step={activeStep} />
+      </Box>}
+    </div >
   );
 }
 
