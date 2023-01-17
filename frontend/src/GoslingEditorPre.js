@@ -64,35 +64,19 @@ const prettifySpec = (spec) => {
 
 const updateTheme = (isDarkTheme, editor) => {
     editor.defineTheme(
-        'gosling',
-        isDarkTheme
-            ? {
-                base: 'vs-dark',
-                inherit: true,
-                rules: [
-                    { token: 'string.key.json', foreground: '#eeeeee', fontStyle: 'bold' }, // all keys
-                    { token: 'string.value.json', foreground: '#8BE9FD', fontStyle: 'bold' }, // all values
-                    { token: 'number', foreground: '#FF79C6', fontStyle: 'bold' },
-                    { token: 'keyword.json', foreground: '#FF79C6', fontStyle: 'bold' } // true and false
-                ],
-                colors: {
-                    // ...
-                }
-            }
-            : {
-                base: 'vs', // vs, vs-dark, or hc-black
-                inherit: true,
-                // Complete rules: https://github.com/microsoft/vscode/blob/93028e44ea7752bd53e2471051acbe6362e157e9/src/vs/editor/standalone/common/themes.ts#L13
-                rules: [
-                    { token: 'string.key.json', foreground: '#222222' }, // all keys
-                    { token: 'string.value.json', foreground: '#035CC5' }, // all values
-                    { token: 'number', foreground: '#E32A4F' },
-                    { token: 'keyword.json', foreground: '#E32A4F' } // true and false
-                ],
-                colors: {
-                    // ...
-                }
-            }
+        'gosling', {
+        base: 'vs', // vs, vs-dark, or hc-black
+        inherit: true,
+        // Complete rules: https://github.com/microsoft/vscode/blob/93028e44ea7752bd53e2471051acbe6362e157e9/src/vs/editor/standalone/common/themes.ts#L13
+        rules: [
+            {background: '#FFFFFF'},
+        ],
+        colors: {
+            'editorGutter.background': '#FFFFFF',
+            'editor.background': '#ffe496'
+        }
+    }
+
     );
 }
 
@@ -111,6 +95,23 @@ class GoslingEditorPre extends React.Component {
     }
     editorWillMount() {
         updateTheme(this.state.isDarkTheme, editor);
+    }
+    editorDidMount(editor, monaco) {
+        const acceptedList = ['arrangement', 'layout', 'mark', 'width', 'height'];
+        acceptedList.forEach(item => {
+            var matches = editor.getModel().findMatches(item);
+            matches.forEach(match => {
+                editor.createDecorationsCollection([
+                    {
+                        range: match.range,
+                        options: {
+                            isWholeLine: true,
+                            className: "defaultLine"
+                        }
+                    },
+                ]);
+            });
+        })
     }
     onChange(code, _) {
         try {
@@ -143,25 +144,26 @@ class GoslingEditorPre extends React.Component {
         const { log } = this.state
         console.log(this.state.spec)
         return <div className='gosling-container' id="goslingEditor">
-            <div style={{ margin: '5px 10px' }}>
+            {/* <div style={{ margin: '5px 10px' }}>
                 <span><b>You can interact with the visualization through zoom and pan, or modify it by changing the code above</b></span>
-            </div>
-            <div style={{ margin: '0 60px' }}>
+            </div> */}
+            <div style={{ margin: '0 40px', height: '95vh', overflow: "scroll"}}>
                 <GoslingComponent
                     spec={this.state.spec}
                     padding={20}
                     className='gosling-component'
                 />
             </div>
-            <div className='codeContainer' style={{ position: "relative", width: "50%" }}>
+            <div className='codeContainer' style={{ position: "relative"}}>
                 <MonacoEditor
-                    height={500}
+                    height='95vh'
                     width='100%'
                     language='json'
                     value={this.state.code}
                     onChange={debounce(this.onChange, this.WAIT)}
                     theme="gosling"
                     editorWillMount={this.editorWillMount.bind(this)}
+                    editorDidMount={this.editorDidMount}
                     options={{ minimap: { enabled: false }, wordWrap: 'on', scrollBeyondLastLine: false }}
                 />
                 <div className={`compile-message compile-message-${log.state}`}>{log.message}</div>

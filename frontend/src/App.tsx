@@ -25,7 +25,9 @@ function DataResult({ data, step }: { data: any, step: Number }) {
   if (step === 0) {
     return <div>
       <GoslingSketch image={image} tracksInfo={currentTracksInfo} width={width} height={height} />
+      
       <PredictionTable currentTracksInfo={currentTracksInfo} setCurrentTracksInfo={setCurrentTracksInfo}></PredictionTable>
+      
       </div>
   }
   if (step === 1) {

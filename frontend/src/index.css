@@ -12,3 +12,15 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.defaultLine {
+  background: #FFFFFF;
+}
+
+.gosling-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr; 
+  grid-gap: 20px; 
+  border: 1px solid black; 
+  width: 100%; 
+}
