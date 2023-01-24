@@ -18,27 +18,37 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import { PredictionTable } from './GoslingTable';
 
-function DataResult({ data, step }: { data: any, step: Number }) {
+const UploadImageComponent = ({ handleFile } : {handleFile : any}) => (
+  <Box className="setup">
+    <Box className="uploadBox" sx={{ width: '100%' }}>
+      <form>
+        <Button variant="contained" component="label">Choose image to analyze
+          <input type="file" name="image" id="image" hidden onChange={handleFile} />
+        </Button>
+      </form>
+    </Box>
+  </Box>
+)
+function AppStepper({ data, step, handleFile, showData }: { data: any, handleFile : any, step: any, showData : any }) {
+  debugger 
+  const initialTracksInfo = !!data ? data.tracks_info : []
+  const [currentTracksInfo, setCurrentTracksInfo] = useState(initialTracksInfo)
+  useEffect(() => {
+    setCurrentTracksInfo(initialTracksInfo)
+  },[data])
+  if (!showData){
+    return <UploadImageComponent handleFile={handleFile}/>
+  }
   const { tracks_info: tracksInfo, image, spec, width, height } = data
+  const predictionComponent = (<div>
+    <GoslingSketch image={image} tracksInfo={currentTracksInfo} width={width} height={height} />
+    <PredictionTable currentTracksInfo={currentTracksInfo} setCurrentTracksInfo={setCurrentTracksInfo}></PredictionTable>
+  </div>)
+  const editorComponent = <GoslingEditorPre spec={JSON.stringify(spec)} />;
+  // alert('hi')
+  const componentArray = [<UploadImageComponent handleFile={handleFile}/>, predictionComponent, editorComponent]
+  return componentArray[step]
 
-  const [currentTracksInfo, setCurrentTracksInfo] = useState(tracksInfo)
-  if (step === 0) {
-    return <div>
-      <GoslingSketch image={image} tracksInfo={currentTracksInfo} width={width} height={height} />
-      
-      <PredictionTable currentTracksInfo={currentTracksInfo} setCurrentTracksInfo={setCurrentTracksInfo}></PredictionTable>
-      
-      </div>
-  }
-  if (step === 1) {
-    return <GoslingEditorPre spec={JSON.stringify(spec)} />;
-  }
-  return (
-    <div>
-      {/*<h2>YoloV7's predictions of the charts' shape</h2>*/}
-      {/* <img src={image} /> */}
-      <pre>{JSON.stringify(tracksInfo, null, 2)}</pre>
-    </div>)
 }
 
 function App() {
@@ -49,7 +59,6 @@ function App() {
 
   const handleFile = async (e: any) => {
     const formObject = new FormData(e.target.form)
-    // alert("submitting!")
     const response = await fetch(VIZ_BACKEND_URL, {
       method: "POST",
       body: formObject
@@ -58,36 +67,32 @@ function App() {
     setData(json)
     setError(!response.ok)
     setHasData(true)
+    setActiveStep(prev => prev + 1)
   }
 
   const handleNavigation = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep === 0 ? 1 : 0);
+    setActiveStep((prevActiveStep) => Math.min(2,prevActiveStep+1));
   }
-
+  const MAX_STEPS = 2
   return (
     <div className="App">
       <Typography>
         <h1 className="page-title">AutoGosling</h1>
       </Typography>
-      <Box className="setup">
-        <Box className="uploadBox" sx={{ width: '100%' }}>
-          <form>
-            <Button variant="contained" component="label">Choose image to analyze
-              <input type="file" name="image" id="image" hidden onChange={handleFile} />
-            </Button>
-          </form>
-        </Box>
-      </Box>
-      {(hasData && !error) && <Box className="results" sx={{ width: '100%' }}>
+      <Box className="results" sx={{ width: '100%' }}>
         <Box sx={{ width: '100%' }}>
           <Stepper activeStep={activeStep}>
-
             <Step key={0}>
+              <Typography>
+                <StepLabel>Upload</StepLabel>
+              </Typography>
+            </Step>
+            <Step key={1}>
               <Typography>
                 <StepLabel>Detection</StepLabel>
               </Typography>
             </Step>
-            <Step key={1}>
+            <Step key={2}>
               <Typography>
                 <StepLabel>Reconstruction</StepLabel>
               </Typography>
@@ -96,13 +101,18 @@ function App() {
 
         </Box>
         <Box className="stepper-buttons">
-          <Box style={{flex: "1 1 auto"}} hidden={activeStep===1}></Box>
-          <Button variant="contained" onClick={handleNavigation}>
-            {activeStep === 1 ? 'Back' : 'Next'}
+          <Box style={{ flex: "1 1 auto" }} hidden={activeStep === 2}></Box>
+          {activeStep != 0 &&
+          <Button variant="contained" onClick={() => setActiveStep(prev => Math.max(prev -1,0))}>
+            Back
           </Button>
+          }
+          {activeStep != MAX_STEPS && <Button variant="contained" onClick={() => setActiveStep(prev => Math.min(prev + 1,10))}>
+            Next
+          </Button>}
         </Box>
-        <DataResult data={data} step={activeStep} />
-      </Box>}
+        <AppStepper showData={hasData && !error} data={data} step={activeStep} handleFile={handleFile}/>
+      </Box>
     </div >
   );
 }

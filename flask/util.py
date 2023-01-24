@@ -49,7 +49,7 @@ def cluster_similar_boxes(boxes):
     return clusters
 
 # Selects all labels from a given category that have a confidence score that is greater than a certain threshold
-def merge_identical_boxes(all_boxes,threshold=0.9):
+def merge_identical_boxes(all_boxes,threshold=0.7):
     clusters = cluster_similar_boxes(all_boxes)
     def merge_labels(boxes):
         initial_obj = boxes[0].copy()
