@@ -8,9 +8,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Button from "@mui/material/Button"
 import TextField from "@mui/material/TextField"
-// import EditIcon from '@mui/icons-material/Edit';
 const properties = ["x", "y", "width", "height", "layout", "mark", "orientation"]
-
 
 const EditableTableCell = ({value,handler,editMode}) => {
     if (!editMode){
