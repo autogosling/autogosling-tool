@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
-import { VIZ_BACKEND_URL } from './Config';
+import { GROUND_VIZ_BACKEND_URL, VIZ_BACKEND_URL } from './Config';
 import './App.css';
 import { GoslingEditorPre, DEFAULT_SPEC } from './GoslingEditorPre';
 // import {GoslingComponent} from "gosling.js";
@@ -39,6 +39,9 @@ function AppStepper({ data, step, handleFile, showData }: { data: any, handleFil
   if (!showData){
     return <UploadImageComponent handleFile={handleFile}/>
   }
+  if (JSON.stringify(data) === "{}"){
+    return <div>AutoGosling could not find the ground truth in the dataset</div>
+  }
   const { tracks_info: tracksInfo, image, width, height } = data
   const predictionComponent = (<div>
     <GoslingSketch image={image} tracksInfo={currentTracksInfo} width={width} height={height} />
@@ -55,12 +58,13 @@ function App() {
   const [hasData, setHasData] = useState(false)
   const [data, setData] = useState()
   const [error, setError] = useState(false)
+  const [useGround, setUseGround] = useState(false)
   const [activeStep, setActiveStep] = useState(0)
 
   const handleFile = async (e: any) => {
     const formObject = new FormData(e.target.form)
     console.log(formObject)
-    const response = await fetch(VIZ_BACKEND_URL, {
+    const response = await fetch(useGround ? GROUND_VIZ_BACKEND_URL : VIZ_BACKEND_URL, {
       method: "POST",
       body: formObject
     })
@@ -79,6 +83,7 @@ function App() {
     <div className="App">
       <Typography>
         <h1 className="page-title">AutoGosling</h1>
+        <Button variant="outlined" onClick={() => setUseGround(prev => !prev)}>{useGround ? "Currently showing Ground Truth. Click to show predictions" : "Currently showing predictions. Click to show ground truth"}</Button>
       </Typography>
       <Box className="results" sx={{ width: '100%' }}>
         <Box sx={{ width: '100%' }}>

@@ -11,9 +11,13 @@ from yolov7_demo import predict
 import base64
 from io import BytesIO
 from assemble import construct_spec
+from finder import find_matching_files
 
 app = Flask(__name__)
 CORS(app)
+
+def rank_tracks(tracks):
+    return list(sorted(tracks,key=lambda el: (el['x'], el['y'])))
 
 @app.route('/',methods=["GET"])
 def main_route():
@@ -34,6 +38,26 @@ def perform_inference(pil_image):
     return {"boxes" : boxes, "classes" : classes,"scores" : scores, "width" : width, "height" : height, "image" : pil2datauri(annotated_img)}
 '''
 
+@app.route('/true_viz_analysis',methods=["POST"])
+def true_viz_analysis():
+    image = request.files['image']
+    pil_image = Image.open(image)
+    if not pil_image.mode == 'RGB':
+        pil_image = pil_image.convert('RGB')
+    filename = request.files['image'].filename.split(".")[0]
+    true_data = find_matching_files(filename)
+    response = {}
+    if true_data is not None:
+        true_ss, true_tracks_info = true_data
+        true_tracks_info = rank_tracks(true_tracks_info)
+        response['image'] = pil2datauri(true_ss)
+        response['tracks_info'] = true_tracks_info
+        response['spec'] = construct_spec(true_tracks_info,"vertical")
+        width, height = true_ss.size
+        response["width"] = width
+        response["height"] = height
+    return jsonify(response)
+    
 @app.route('/viz_analysis',methods=["POST"])
 def viz_analysis():
     image = request.files['image']
@@ -66,6 +90,7 @@ def viz_analysis():
     raw_tracks_info = merge_parsed_list(shape_info_parsed,prop_info_parsed)
     tracks_info = [add_orientation(info) for info in raw_tracks_info]
     tracks_info = [track_info for track_info in tracks_info if len(track_info['mark']) > 0]
+    tracks_info = rank_tracks(tracks_info)
     # import ipdb; ipdb.set_trace()
     print(tracks_info)
 

@@ -73,7 +73,7 @@ const updateTheme = (isDarkTheme, editor) => {
         ],
         colors: {
             'editorGutter.background': '#FFFFFF',
-            'editor.background': '#ffe496'
+            'editor.background': '#FFFFFF'
         }
     }
 
