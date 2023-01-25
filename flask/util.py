@@ -4,7 +4,7 @@ def parse_list(info_tuple):
     mydict = {'x' : x0, 'y' : y0, 'width' : x1-x0, 'height' : y1-y0, 'class' : name, 'score' : score}
     return mydict
 
-def has_iou(item1,item2,thresh=0.98):
+def has_iou(item1,item2,thresh=0.7):
     x0, y0, x1, y1 = item1['x'], item1['y'], item1['x'] + item1['width'], item1['y'] + item1['height']
     x2_0, y2_0, x2_1, y2_1 = item2['x'], item2['y'], item2['x'] + item2['width'], item2['y'] + item2['height']
     inner_x0 = max(x0,x2_0)
@@ -54,10 +54,7 @@ def merge_identical_boxes(all_boxes,threshold=0.7):
     def merge_labels(boxes):
         initial_obj = boxes[0].copy()
         all_classes = [box['class'] for box in boxes if box['score'] > threshold]
-        if len(all_classes) == 1:
-            initial_obj['class'] = [all_classes[0]]
-        else:
-            initial_obj['class'] = all_classes
+        initial_obj['class'] = all_classes
         return initial_obj
     return [merge_labels(cluster) for cluster in clusters]
 
@@ -72,6 +69,6 @@ def merge_parsed_list(shape_list,prop_list):
     merged_list = []
     for item1, item2 in itertools.product(shape_list,prop_list):
         if has_iou(item1,item2):
-            new_item = {'x' : float(item1['x']), 'y' : float(item1['y']), 'width' : float(item1['width']), 'height' : float(item1['height']), 'layout' : item1['class'], 'mark' : item2['class'], 'score' : item2['score']}
+            new_item = {'x' : float(item1['x']), 'y' : float(item1['y']), 'width' : float(item1['width']), 'height' : float(item1['height']), 'layout' : item1['class'], 'mark' : item2['class'], 'layout_score' : item1['score'], 'score' : item2['score']}
             merged_list.append(new_item)
     return merged_list

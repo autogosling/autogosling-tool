@@ -104,11 +104,9 @@ def predict(img):
         color = colors[name]
         if name in class_set:
             name += ' '+str(score)
-        #   cv2.rectangle(image,box[:2],box[2:],color,2)
-        #   cv2.putText(image,name,(box[0]+10, box[1] + 20),cv2.FONT_HERSHEY_PLAIN,0.75,(0,0,0),thickness=1)  
             new_x0, new_y0, new_x1, new_y1 = box
             important_info.append((classes[cls_id],new_x0,new_y0,new_x1,new_y1,cls_id,score))
-    return Image.fromarray(image), important_info
+    return Image.fromarray(ori_images[0]), important_info
   shape_image, shape_info = make_image(["linear","circular"])
   other_image, other_info = make_image([el for el in classes if el not in ['linear','circular']])
   # return bboxes, scores

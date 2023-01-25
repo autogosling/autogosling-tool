@@ -39,12 +39,12 @@ function AppStepper({ data, step, handleFile, showData }: { data: any, handleFil
   if (!showData){
     return <UploadImageComponent handleFile={handleFile}/>
   }
-  const { tracks_info: tracksInfo, image, spec, width, height } = data
+  const { tracks_info: tracksInfo, image, width, height } = data
   const predictionComponent = (<div>
     <GoslingSketch image={image} tracksInfo={currentTracksInfo} width={width} height={height} />
     <PredictionTable currentTracksInfo={currentTracksInfo} setCurrentTracksInfo={setCurrentTracksInfo}></PredictionTable>
   </div>)
-  const editorComponent = <GoslingEditorPre spec={JSON.stringify(spec)} />;
+  const editorComponent = !!data.spec ? <GoslingEditorPre spec={JSON.stringify(data.spec)} /> : <div>AutoGosling could not generate a spec file as there was nothing detected.</div>;
   // alert('hi')
   const componentArray = [<UploadImageComponent handleFile={handleFile}/>, predictionComponent, editorComponent]
   return componentArray[step]
@@ -59,6 +59,7 @@ function App() {
 
   const handleFile = async (e: any) => {
     const formObject = new FormData(e.target.form)
+    console.log(formObject)
     const response = await fetch(VIZ_BACKEND_URL, {
       method: "POST",
       body: formObject

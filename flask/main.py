@@ -65,11 +65,11 @@ def viz_analysis():
         return new_obj
     raw_tracks_info = merge_parsed_list(shape_info_parsed,prop_info_parsed)
     tracks_info = [add_orientation(info) for info in raw_tracks_info]
+    tracks_info = [track_info for track_info in tracks_info if len(track_info['mark']) > 0]
     # import ipdb; ipdb.set_trace()
     print(tracks_info)
 
     # '''
-    spec = construct_spec(tracks_info,"vertical")
     images = {
     #    "labelled_image" : labelled_true_image,
         "image" : shape_img,
@@ -77,7 +77,9 @@ def viz_analysis():
     }
     width, height = shape_img.size
     response = {key:pil2datauri(val) for key, val in images.items()}
-    response["spec"]= spec
+    # response["spec"]= spec
+    if len(tracks_info) > 0:
+        response["spec"] = construct_spec(tracks_info,"vertical")
     response["tracks_info"]= tracks_info
     response["width"] = width
     response["height"] = height
