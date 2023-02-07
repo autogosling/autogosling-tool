@@ -5,14 +5,16 @@ TEST_SIZE = 0.2
 VALID_SIZE = 0.1 # 10% of the training set
 
 np.random.seed(SEED)
-ABS_DIR = "/home/ec2-user/data/extracted-1"
+ABS_DIR = "/home/ec2-user/data/extracted-2"
 aws_split_config = {
     "image_folder" : pjoin(ABS_DIR,"screenshot"),
     "bbox_folder" : pjoin(ABS_DIR,"bounding_box"),
-    "layout_folder" : pjoin(ABS_DIR,"layouts"),
     "chart_folder" : pjoin(ABS_DIR,"chart"),
+    "layout_folder" : pjoin(ABS_DIR,"layouts"),
     # "mark_folder" : pjoin(ABS_DIR,"marks"),
-    "orientation_folder" : pjoin(ABS_DIR,"orientations")
+    "orientation_folder" : pjoin(ABS_DIR,"orientations"),
+    # "row_folder": pjoin(ABS_DIR,"row")
+    # "color_folder": pjoin(ABS_DIR,"color")
 }
 
 split_config = aws_split_config
