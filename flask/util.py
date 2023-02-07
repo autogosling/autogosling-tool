@@ -27,7 +27,7 @@ def has_iou(item1,item2,thresh=0.7):
 # for marks, output those that are > than a certain confidence score
 # If only one mark in the bounding box: {'x': 0, 'y': 1100, 'width': 800, 'height': 210, 'layout': 'linear', 'mark': 'line'}
 # If multiple marks in the bounding box: {'x': 0, 'y': 1100, 'width': 800, 'height': 210, 'layout': 'linear', 'mark': ['rect', 'brush']}
-# TODO: Add orientation  {'x': 0, 'y': 1100, 'width': 800, 'height': 210, 'layout': 'linear', 'mark': ['rect', 'brush'], 'orientation': 'vertical'}
+# TODO: Output confidence score for each prediction
 
 def helper_cluster_similar_boxes(box,clusters):
     new_boxes = []
@@ -55,6 +55,7 @@ def merge_identical_boxes(all_boxes,threshold=0.7):
         initial_obj = boxes[0].copy()
         all_classes = [box['class'] for box in boxes if box['score'] > threshold]
         initial_obj['class'] = all_classes
+        initial_obj['score'] = [box['score'] for box in boxes if box['score'] > threshold]
         return initial_obj
     return [merge_labels(cluster) for cluster in clusters]
 
