@@ -12,6 +12,7 @@ import base64
 from io import BytesIO
 from assemble import construct_spec
 from finder import find_matching_files
+import numpy as np
 
 app = Flask(__name__)
 CORS(app)
@@ -57,9 +58,29 @@ def true_viz_analysis():
         response["width"] = width
         response["height"] = height
     return jsonify(response)
+
     
 @app.route('/viz_analysis',methods=["POST"])
 def viz_analysis():
+    if (request.form["predict"] == "True"):
+        print("Needs prediction!")
+    else:
+        def format_tracks_info(track):
+            for key, val in track.items():
+                if key not in ["x", "y", "width", "height"]:
+                    if type(val) is not list:
+                        track[key] = [val]
+            return track
+        print("Just update!")
+        tracks_info = json.loads(request.form["track_info"])
+        response = {}
+        if len(tracks_info) > 0:
+            print(tracks_info)
+            tracks_info = list(map(format_tracks_info, tracks_info))
+            response["spec"] = construct_spec(tracks_info,"vertical")
+            print(response["spec"])
+        response["tracks_info"]= tracks_info
+        return jsonify(response)
     image = request.files['image']
     # json_labels = json.load(request.files['json'])
     pil_image = Image.open(image)
@@ -110,6 +131,14 @@ def viz_analysis():
     response["height"] = height
     return jsonify(response)
     # '''
+
+
+@app.route('/reconstruct',methods=["POST"])
+def reconstruct():
+    track_info = request.form
+    print(track_info)
+    return {"message": "received"}
+
 
 print("running app!")
 app.run(host="0.0.0.0",port=7777,debug=False)
