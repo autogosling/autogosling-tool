@@ -1,8 +1,8 @@
 import copy
 
 MARK_1D = ["rect", "triangleLeft", "triangleRight",
-           "rule", "betweenLink", "withinLink", "text"]
-MARK_2D = ["rect", "bar", "point", "line", "area", "text"]
+           "rule", "betweenLink", "withinLink", "ideogram"]
+MARK_2D = ["rect", "bar", "point", "line", "area",]
 
 DEFAULT_SUBTRACK_2D_BAR = {
     "mark": "bar"
@@ -21,7 +21,33 @@ DEFAULT_SUBTRACK_1D_RULE = {
     "mark": "rule"
 }
 
-DEFAULT_SUBTRACK_1D_RECT = {
+
+DEFAULT_SUBTRACK_1D_RECT =  {
+    "mark": "rect",
+    "dataTransform": [
+            {
+                "type": "filter",
+                "field": "Stain",
+                "oneOf": ["acen"],
+                "not": true
+            }
+    ],
+    "color": {
+        "field": "Stain",
+        "type": "nominal",
+        "domain": [
+                "gneg",
+                "gpos25"
+        ],
+        "range": [
+            "white",
+            "#A0A0F2"
+        ]
+    }
+}
+
+
+DEFAULT_SUBTRACK_1D_IDEOGRAM = {
     "mark": "rect",
     "dataTransform": [
             {
@@ -59,8 +85,7 @@ DEFAULT_SUBTRACK_1D_TRIANGLERIGHT = {
     "dataTransform": [
         {"type": "filter", "field": "Stain", "oneOf": ["acen"]},
         {"type": "filter", "field": "Name", "include": "q"}
-    ],
-    "color": {"value": "#B40101"}
+    ]
 }
 
 DEFAULT_SUBTRACK_1D_TRIANGLELEFT = {
@@ -68,8 +93,15 @@ DEFAULT_SUBTRACK_1D_TRIANGLELEFT = {
     "dataTransform": [
         {"type": "filter", "field": "Stain", "oneOf": ["acen"]},
         {"type": "filter", "field": "Name", "include": "p"}
-    ],
-    "color": {"value": "#B40101"}
+    ]
+}
+
+DEFAULT_SUBTRACK_1D_WITHINLINK = {
+    "mark": "withinLink"
+}
+
+DEFAULT_SUBTRACK_1D_BETWEENLINK = {
+    "mark": "betweenLink"
 }
 
 DEFAULT_TRACK = {
@@ -113,7 +145,7 @@ DEFAULT_TRACK_1D = {
 
 DEFAULT_TRACK_HEATMAP = {
     "data": {
-        "url": "https://server.gosling-lang.org/api/v1/tileset_info/?d=hffc6-microc-hg38",
+        "url": "https://higlass.io/api/v1/tileset_info/?d=CQMd6V_cRw6iCI_-Unl3PQ",
         "type": "matrix"
     },
     "mark": "rect",
@@ -152,8 +184,14 @@ def get_default_subtrack(name):
         return copy.deepcopy(DEFAULT_SUBTRACK_2D_POINT)
     elif name == "line":
         return copy.deepcopy(DEFAULT_SUBTRACK_2D_LINE)
+    elif name == "withinLink":
+        return copy.deepcopy(DEFAULT_SUBTRACK_1D_WITHINLINK)
+    elif name == "betweenLink":
+        return copy.deepcopy(DEFAULT_SUBTRACK_1D_BETWEENLINK)
     elif name == "heatmap":
         return None
+    elif name == "ideogram":
+        return copy.deepcopy(DEFAULT_SUBTRACK_1D_IDEOGRAM)
     elif name == "triangleLeft":
         return copy.deepcopy(DEFAULT_SUBTRACK_1D_TRIANGLELEFT)
     elif name == "triangleRight":
