@@ -23,4 +23,4 @@ const layoutOptions = [
     "circular"
 ]
 
-export {orientOptions, layoutOptions};
+export {orientOptions, layoutOptions, chartOptions};
