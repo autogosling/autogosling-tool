@@ -30,8 +30,10 @@ const options = {
 
 const EditableTableCell = ({value,handler,editMode,property}) => {
     const handleChange = (e) => {
-        const newValue = e.target.value
-        handler(newValue)
+        const {
+            target:{value},
+        } = e;
+        handler(value)
     }
     const handleMultipleChange = (e)=>{
         const {
@@ -49,16 +51,21 @@ const EditableTableCell = ({value,handler,editMode,property}) => {
                 <InputLabel variant="standard" htmlFor="uncontrolled-native">
                 {property}
                 </InputLabel>
-                <NativeSelect
-                defaultValue={value}
+                <Select
+                value={value}
+                name="single-select"
                 onChange={handleChange}
+                input={<OutlinedInput label={property} />}
                 inputProps={{
                     name: 'value',
                     id: 'uncontrolled-native',
                 }}
                 >
-                {options[property].map(x=><option value={x}>{x}</option>)}
-                </NativeSelect>
+                {options[property].map(x=>
+                    <MenuItem key={x} value={x}>
+                        {x}
+                    </MenuItem>)}
+                </Select>
             </FormControl>
         </TableCell>
     } else if (multiSelectProperties.includes(property)){

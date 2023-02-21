@@ -35,6 +35,7 @@ function AppStepper({ data, step, handleFile, showData }: { data: any, handleFil
   const initialSpec = !!data ? data.spec : []
   const [spec,setSpec] = useState(initialSpec)
   const [currentTracksInfo, setCurrentTracksInfo] = useState(initialTracksInfo)
+  const [confirmed, setConfirmed] = useState(false);
   useEffect(() => {
     setCurrentTracksInfo(initialTracksInfo)
   },[data])
@@ -58,14 +59,18 @@ function AppStepper({ data, step, handleFile, showData }: { data: any, handleFil
     if (json["spec"] != null){
       console.log(json["spec"])
       setSpec(json["spec"])
+      if (!confirmed){
+        setConfirmed(true);
+      }
     }
     console.log("Json", json)
-
+    
   }
   const predictionComponent = (<div>
     <GoslingSketch image={image} tracksInfo={currentTracksInfo} width={width} height={height} />
     <PredictionTable currentTracksInfo={currentTracksInfo} setCurrentTracksInfo={setCurrentTracksInfo}></PredictionTable>
     <Button onClick={() => submitTable()}>Confirm</Button>
+    {/* {confirmed && <p>Changes have been saved!</p> } -->*/}
   </div>)
   const editorComponent = !!data.spec ? <GoslingEditorPre spec={JSON.stringify(spec)} /> : <div>AutoGosling could not generate a spec file as there was nothing detected.</div>;
   // alert('hi')
