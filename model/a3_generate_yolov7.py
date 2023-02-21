@@ -114,8 +114,14 @@ def convert_txt(json_path,classes, full_w,full_h):
         h /= full_h
 
         rest_data = ' '.join([str(el) for el in [cx,cy,w,h]])
+        def encode_numerical(multihot):
+            orig_num = 0
+            for el in multihot:
+                orig_num += 1 << el
+            return orig_num
+
         def clean_dump(object):
-            return ''.join([char for char in json.dumps(object) if char != " "])
+            return encode_numerical(object[0]) + 0.1 * object[1] + 0.01 * object[2] # Storing labels (e.g., mark 14, ) in the following format
         return list({f"{clean_dump(current_classes)} {rest_data}" for ind in current_classes if ind != -1})
 
     nested_lists = filter(lambda el: el is not None,[parse_item(item,current_classes) for item,current_classes in zip(data,classes)])
