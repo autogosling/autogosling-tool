@@ -21,7 +21,6 @@ DEFAULT_SUBTRACK_1D_RULE = {
     "mark": "rule"
 }
 
-
 DEFAULT_SUBTRACK_1D_RECT =  {
     "mark": "rect",
     "dataTransform": [
