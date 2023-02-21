@@ -21,7 +21,34 @@ DEFAULT_SUBTRACK_1D_RULE = {
     "mark": "rule"
 }
 
-DEFAULT_SUBTRACK_1D_RECT = {
+
+
+DEFAULT_SUBTRACK_1D_RECT =  {
+    "mark": "rect",
+    "dataTransform": [
+            {
+                "type": "filter",
+                "field": "Stain",
+                "oneOf": ["acen"],
+                "not": True
+            }
+    ],
+    "color": {
+        "field": "Stain",
+        "type": "nominal",
+        "domain": [
+                "gneg",
+                "gpos25"
+        ],
+        "range": [
+            "white",
+            "#A0A0F2"
+        ]
+    }
+}
+
+
+DEFAULT_SUBTRACK_1D_IDEOGRAM = {
     "mark": "rect",
     "dataTransform": [
             {

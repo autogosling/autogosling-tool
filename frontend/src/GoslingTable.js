@@ -7,19 +7,88 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Button from "@mui/material/Button"
-import TextField from "@mui/material/TextField"
-const properties = ["x", "y", "width", "height", "layout", "mark", "orientation"]
+import TextField from "@mui/material/TextField";
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+import NativeSelect from '@mui/material/NativeSelect';
+import MenuItem from '@mui/material/MenuItem';
+import OutlinedInput from '@mui/material/OutlinedInput';
 
-const EditableTableCell = ({value,handler,editMode}) => {
+import { GROUND_VIZ_BACKEND_URL, VIZ_BACKEND_URL } from './Config';
+import { layoutOptions,orientOptions, chartOptions } from "./utils";
+import { Select } from "@mui/material";
+
+
+const properties = ["x", "y", "width", "height", "layout", "mark", "orientation"]
+const singleSelectProperties = ["layout", "orientation"]
+const multiSelectProperties = ["mark"]
+const options = {
+    "layout": layoutOptions,
+    "orientation":orientOptions,
+    "mark":chartOptions
+}
+
+const EditableTableCell = ({value,handler,editMode,property}) => {
+    const handleChange = (e) => {
+        const {
+            target:{value},
+        } = e;
+        handler(value)
+    }
+    const handleMultipleChange = (e)=>{
+        const {
+            target:{value},
+        } = e;
+        handler(typeof value === 'string' ? value.split(','):value,);
+    }
     if (!editMode){
         return <TableCell>
             {value}
             </TableCell>
+    } else if (singleSelectProperties.includes(property)){
+        return <TableCell>
+            <FormControl fullWidth>
+                <InputLabel variant="standard" htmlFor="uncontrolled-native">
+                {property}
+                </InputLabel>
+                <Select
+                value={value}
+                name="single-select"
+                onChange={handleChange}
+                input={<OutlinedInput label={property} />}
+                inputProps={{
+                    name: 'value',
+                    id: 'uncontrolled-native',
+                }}
+                >
+                {options[property].map(x=>
+                    <MenuItem key={x} value={x}>
+                        {x}
+                    </MenuItem>)}
+                </Select>
+            </FormControl>
+        </TableCell>
+    } else if (multiSelectProperties.includes(property)){
+        return <TableCell>
+            <FormControl fullWidth>
+                <InputLabel variant="standard" htmlFor="uncontrolled-native">
+                {property}
+                </InputLabel>
+                <Select 
+                multiple
+                value={value}
+                name="multiple-select"
+                onChange = {handleMultipleChange}
+                input={<OutlinedInput label={property} />}
+                >
+                    {options[property].map(x=>
+                    <MenuItem key={x} value={x}>
+                        {x}
+                    </MenuItem>)}
+                </Select>
+            </FormControl>
+        </TableCell>
     } else {
-        const handleChange = (e) => {
-            const newValue = e.target.value
-            handler(newValue)
-        }
         return <TableCell>
             <TextField variant="outlined" value={value} size="small" onChange={handleChange}/>
         </TableCell>
@@ -30,7 +99,7 @@ const EditableTableCell = ({value,handler,editMode}) => {
 const PredictionRow = ({trackInfo,index,createHandler,editMode}) => {
     return <TableRow>
         {properties.map(property => (
-            <EditableTableCell editMode={editMode} handler={createHandler(index,property)} value={trackInfo[property]}/>
+            <EditableTableCell editMode={editMode} handler={createHandler(index,property)} value={trackInfo[property]} property={property} />
         ))}
     </TableRow>
 
@@ -57,6 +126,8 @@ export const PredictionTable = ({ currentTracksInfo, setCurrentTracksInfo }) => 
     return <Table sx={{ minWidth: 650 }} aria-label="gosling bounding box prediction table">
         <TableHead>{tableHeadings}</TableHead>
         <TableBody>{tableRows}</TableBody>
-        <Button onClick={() => setEditMode(oldValue => !oldValue)}>Toggle edit mode</Button>
+        <Button onClick={() => {
+            setEditMode(oldValue => !oldValue)
+        }}>Toggle edit mode</Button>
     </Table >
 }
