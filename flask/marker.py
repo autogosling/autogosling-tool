@@ -29,7 +29,7 @@ DEFAULT_SUBTRACK_1D_RECT =  {
                 "type": "filter",
                 "field": "Stain",
                 "oneOf": ["acen"],
-                "not": true
+                "not": True
             }
     ],
     "color": {
