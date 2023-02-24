@@ -66,7 +66,7 @@ def load_mapping(mapping_fn="data/class_mapping.json"):
 def to_indices(mylist):
     return {el:i for i,el in enumerate(mylist)}
 CLASS_MAPPING = {
-    "chart" : to_indices(["area", "bar", "heatmap", "line", "point", "rect", "rule", "triangleLeft", "triangleRight", "withinLink"]),
+    "chart" : to_indices(["area", "bar", "heatmap", "ideogram", "line", "point", "rect", "rule", "triangleLeft", "triangleRight", "withinLink"]),
     "orientation" : to_indices(["horizontal","vertical"]),
     "layout" : to_indices(["linear","circular"])
 } 
