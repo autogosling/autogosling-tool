@@ -115,6 +115,22 @@ def get_bbox_xs(track_info):
 def get_bbox_ys(track_info):
     return track_info["y"], track_info["y"]+track_info["height"]
 
+NUMERIC_FIELD = ["x","y", "width", "height"]
+STRING_FIELD = ["orientation", "layout"]
+LIST_OF_STR_FIELD = ["mark"]
+
+def clean_track_info(track_info):
+    for key, val in track_info.items():
+        if key in NUMERIC_FIELD:
+            track_info[key] = float(track_info[key])
+        elif key in STRING_FIELD:
+            if type(val) == list:
+                track_info[key] = str(track_info[key][0])
+        elif key in LIST_OF_STR_FIELD:
+            if type(val) == str:
+                track_info[key] = list(track_info[key].split(","))
+    return track_info
+
 
 def construct_spec(track_infos, arrangement):
     if len(track_infos) == 1:
@@ -177,6 +193,36 @@ def generate_spec_from_example(fn=EXAMPLE_FILENAME):
     spec = construct_spec(info_structures, "vertical")
     return spec
 
+
+def add_track(tracks_info):
+    if len(tracks_info) == 0:
+        max_y = 0
+        max_x = 400
+        some_height = 400 
+    else:
+        max_y = max([track["y"]+track["height"] for track in tracks_info])
+        max_x = max([track["x"]+track["width"] for track in tracks_info])
+        some_height = max([track["height"] for track in tracks_info])
+    new_track = {
+        "x" : 0,
+        "y" : max_y,
+        "width": max_x,
+        "height": some_height,
+        "layout": "linear",
+        "orientation": "horizontal",
+        "mark": ["bar"]
+    }
+    tracks_info.append(new_track)
+    return tracks_info
+
+def remove_last_track(tracks_info):
+    print(tracks_info)
+
+    if len(tracks_info)>0:
+        print(tracks_info)
+
+        return tracks_info[:-1]
+    return tracks_info
 
 if __name__ == "__main__":
     res = generate_spec_from_example()

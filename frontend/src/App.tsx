@@ -63,12 +63,60 @@ function AppStepper({ data, step, handleFile, showData }: { data: any, handleFil
         setConfirmed(true);
       }
     }
-    console.log("Json", json)
-    
+    console.log("Json", json) 
   }
+
+  const addTrack = async () =>{
+    console.log("Submit table")
+    const formObject = new FormData();
+    formObject.append("predict", "False")
+    formObject.append("append", "True")
+    formObject.append("track_info", JSON.stringify(currentTracksInfo))
+    const response = await fetch(VIZ_BACKEND_URL, {
+        method: "POST",
+        body: formObject
+      })
+    const json = await response.json()
+    if (json["spec"] != null){
+      console.log(json["spec"])
+      setSpec(json["spec"])
+    }
+    if (json["tracks_info"] != null){
+      setCurrentTracksInfo(json["tracks_info"])
+      console.log(currentTracksInfo)
+
+    }
+    console.log("Json", json) 
+  }
+
+  const deleteLastTrack = async () =>{
+    console.log("Delete table")
+    const formObject = new FormData();
+    formObject.append("predict", "False")
+    formObject.append("delete", "True")
+    formObject.append("track_info", JSON.stringify(currentTracksInfo))
+    const response = await fetch(VIZ_BACKEND_URL, {
+        method: "POST",
+        body: formObject
+      })
+    const json = await response.json()
+    if (json["spec"] != null){
+      setSpec(json["spec"])
+    }
+    if (json["tracks_info"] != null){
+      setCurrentTracksInfo(json["tracks_info"])
+      console.log(currentTracksInfo)
+
+    }
+    console.log("Json", json) 
+  }
+
+
   const predictionComponent = (<div>
     <GoslingSketch image={image} tracksInfo={currentTracksInfo} width={width} height={height} />
     <PredictionTable currentTracksInfo={currentTracksInfo} setCurrentTracksInfo={setCurrentTracksInfo}></PredictionTable>
+    <Button onClick={()=> addTrack()}> Add A New Track</Button>
+    <Button onClick={()=> deleteLastTrack()}> Delete Last Track</Button>
     <Button onClick={() => submitTable()}>Confirm</Button>
     {/* {confirmed && <p>Changes have been saved!</p> } -->*/}
   </div>)

@@ -10,7 +10,7 @@ from util import parse_list,has_iou,helper_cluster_similar_boxes,cluster_similar
 from yolov7_demo import predict
 import base64
 from io import BytesIO
-from assemble import construct_spec
+from assemble import construct_spec, clean_track_info, add_track, remove_last_track
 from finder import find_matching_files
 import numpy as np
 
@@ -73,13 +73,19 @@ def viz_analysis():
             return track
         print("Just update!")
         tracks_info = json.loads(request.form["track_info"])
+        print(tracks_info)
+        tracks_info = list(map(format_tracks_info, tracks_info))
+        tracks_info = list(map(clean_track_info, tracks_info))
+        print(tracks_info)
         response = {}
-        if len(tracks_info) > 0:
-            print(tracks_info)
-            tracks_info = list(map(format_tracks_info, tracks_info))
-            response["spec"] = construct_spec(tracks_info,"vertical")
-            print(response["spec"])
+        if "append" in request.form.keys() and request.form["append"] == "True":
+            tracks_info = add_track(tracks_info)
+        elif "delete" in request.form.keys() and request.form["delete"] == "True":
+            tracks_info = remove_last_track(tracks_info)
+        
         response["tracks_info"]= tracks_info
+        if len(tracks_info)>0:
+            response["spec"] = construct_spec(tracks_info,"vertical")        
         return jsonify(response)
     image = request.files['image']
     # json_labels = json.load(request.files['json'])
@@ -125,19 +131,13 @@ def viz_analysis():
     response = {key:pil2datauri(val) for key, val in images.items()}
     # response["spec"]= spec
     if len(tracks_info) > 0:
+        tracks_info = list(map(clean_track_info, tracks_info))
         response["spec"] = construct_spec(tracks_info,"vertical")
     response["tracks_info"]= tracks_info
     response["width"] = width
     response["height"] = height
     return jsonify(response)
     # '''
-
-
-@app.route('/reconstruct',methods=["POST"])
-def reconstruct():
-    track_info = request.form
-    print(track_info)
-    return {"message": "received"}
 
 
 print("running app!")

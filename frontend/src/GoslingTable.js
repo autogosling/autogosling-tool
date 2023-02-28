@@ -106,7 +106,7 @@ const PredictionRow = ({trackInfo,index,createHandler,editMode}) => {
 }
 
 export const PredictionTable = ({ currentTracksInfo, setCurrentTracksInfo }) => {
-    const [editMode, setEditMode] = useState(false)
+    const [editMode, setEditMode] = useState(true)
     const createChangeHandler = (index, property) => (newValue) => {
         setCurrentTracksInfo(oldTracksInfo => {
             const newTracksInfo = oldTracksInfo.map((trackInfo,currentIndex) =>{
@@ -126,8 +126,8 @@ export const PredictionTable = ({ currentTracksInfo, setCurrentTracksInfo }) => 
     return <Table sx={{ minWidth: 650 }} aria-label="gosling bounding box prediction table">
         <TableHead>{tableHeadings}</TableHead>
         <TableBody>{tableRows}</TableBody>
-        <Button onClick={() => {
+        {/* <Button hidden onClick={() => {
             setEditMode(oldValue => !oldValue)
-        }}>Toggle edit mode</Button>
+        }}>Toggle edit mode</Button> */}
     </Table >
 }
