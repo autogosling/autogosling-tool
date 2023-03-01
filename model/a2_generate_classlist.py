@@ -5,7 +5,7 @@ Output:
 class_category_list.json: {"category1": ["class1", "class2", ...], "category2", ["class3", "class4"], ...}
 class_list.json: ["class1", "class2", "class3", ....]
 class_list.txt: class1 class2 class3 ...
-class_mapping.json
+class_mapping.json --> used in a3_generate_yolov7.py
 '''
 
 import os
