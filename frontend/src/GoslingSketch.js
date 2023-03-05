@@ -31,12 +31,16 @@ export default ({image, tracksInfo, width, height}) => {
 	const setup = (p5, canvasParentRef) => {
 		// use parent to render the canvas in this ref
 		// (without that p5 will render the canvas outside of your component)
-		p5.createCanvas(width, height).parent(canvasParentRef);
+		const cnv = p5.createCanvas(width, height).parent(canvasParentRef);
+        cnv.mouseClicked((event) => {
+            console.log(event);
+        })
         p5.image(p5Image,width,height)
 	};
     const preload = (p5) => {
         p5Image = p5.loadImage(image)
     }
+
 
 	const draw = (p5) => {
         p5.background(0)

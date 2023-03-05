@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
 import { GROUND_VIZ_BACKEND_URL, VIZ_BACKEND_URL } from './Config';
 import './App.css';
-import { GoslingEditorPre, DEFAULT_SPEC } from './GoslingEditorPre';
-// import {GoslingComponent} from "gosling.js";
+import { GoslingEditorPre, DEFAULT_SPEC,stripJsonComments } from './GoslingEditorPre';
+import {GoslingComponent} from "gosling.js";
 import GoslingSketch from "./GoslingSketch"
 import { EX_SPEC_BASIC_SEMANTIC_ZOOM } from "./default_specs";
 import Box from '@mui/material/Box';
@@ -33,11 +33,14 @@ function AppStepper({ data, step, handleFile, showData }: { data: any, handleFil
   debugger 
   const initialTracksInfo = !!data ? data.tracks_info : []
   const initialSpec = !!data ? data.spec : []
+  console.log(initialSpec)
   const [spec,setSpec] = useState(initialSpec)
+  console.log(spec)
   const [currentTracksInfo, setCurrentTracksInfo] = useState(initialTracksInfo)
-  const [confirmed, setConfirmed] = useState(false);
+  //const [confirmed, setConfirmed] = useState(false);
   useEffect(() => {
     setCurrentTracksInfo(initialTracksInfo)
+    setSpec(initialSpec)
   },[data])
   if (!showData){
     return <UploadImageComponent handleFile={handleFile}/>
@@ -57,17 +60,11 @@ function AppStepper({ data, step, handleFile, showData }: { data: any, handleFil
       })
     const json = await response.json()
     if (json["spec"] != null){
-      console.log(json["spec"])
       setSpec(json["spec"])
-      if (!confirmed){
-        setConfirmed(true);
-      }
     }
-    console.log("Json", json) 
   }
 
   const addTrack = async () =>{
-    console.log("Submit table")
     const formObject = new FormData();
     formObject.append("predict", "False")
     formObject.append("append", "True")
@@ -78,7 +75,6 @@ function AppStepper({ data, step, handleFile, showData }: { data: any, handleFil
       })
     const json = await response.json()
     if (json["spec"] != null){
-      console.log(json["spec"])
       setSpec(json["spec"])
     }
     if (json["tracks_info"] != null){
@@ -86,11 +82,9 @@ function AppStepper({ data, step, handleFile, showData }: { data: any, handleFil
       console.log(currentTracksInfo)
 
     }
-    console.log("Json", json) 
   }
 
   const deleteLastTrack = async () =>{
-    console.log("Delete table")
     const formObject = new FormData();
     formObject.append("predict", "False")
     formObject.append("delete", "True")
@@ -108,15 +102,28 @@ function AppStepper({ data, step, handleFile, showData }: { data: any, handleFil
       console.log(currentTracksInfo)
 
     }
-    console.log("Json", json) 
   }
 
+  const reset = async () =>{
+    setSpec(initialSpec)
+    setCurrentTracksInfo(initialTracksInfo)
+  }
 
   const predictionComponent = (<div>
+    <div className='gosling-container' id="goslingEditor">
     <GoslingSketch image={image} tracksInfo={currentTracksInfo} width={width} height={height} />
+    <div style={{ margin: '0 0px', height: '70vh', overflow: "scroll"}}>
+        <GoslingComponent
+            spec={spec}
+            padding={0}
+            className='gosling-component'
+        />
+    </div>
+    </div>
     <PredictionTable currentTracksInfo={currentTracksInfo} setCurrentTracksInfo={setCurrentTracksInfo}></PredictionTable>
     <Button onClick={()=> addTrack()}> Add A New Track</Button>
     <Button onClick={()=> deleteLastTrack()}> Delete Last Track</Button>
+    <Button onClick={()=> reset()}> Reset</Button>
     <Button onClick={() => submitTable()}>Confirm</Button>
     {/* {confirmed && <p>Changes have been saved!</p> } -->*/}
   </div>)
