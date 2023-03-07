@@ -19,7 +19,7 @@ import { layoutOptions,orientOptions, chartOptions } from "./utils";
 import { Select } from "@mui/material";
 
 
-const properties = ["x", "y", "width", "height", "layout", "mark", "orientation"]
+const properties = ["layout", "mark", "orientation","x", "y", "width", "height", ]
 const singleSelectProperties = ["layout", "orientation"]
 const multiSelectProperties = ["mark"]
 const options = {
@@ -96,8 +96,9 @@ const EditableTableCell = ({value,handler,editMode,property}) => {
     }
 }
 
-const PredictionRow = ({trackInfo,index,createHandler,editMode}) => {
-    return <TableRow>
+const PredictionRow = ({trackInfo,index,createHandler,editMode, selected, handleClick}) => {
+    return <TableRow selected = {selected} onClick={e=>handleClick(e,index, selected)}>
+        <TableCell>{index+1}</TableCell>
         {properties.map(property => (
             <EditableTableCell editMode={editMode} handler={createHandler(index,property)} value={trackInfo[property]} property={property} />
         ))}
@@ -105,7 +106,7 @@ const PredictionRow = ({trackInfo,index,createHandler,editMode}) => {
 
 }
 
-export const PredictionTable = ({ currentTracksInfo, setCurrentTracksInfo }) => {
+export const PredictionTable = ({ currentTracksInfo, setCurrentTracksInfo, selected, setSelected }) => {
     const [editMode, setEditMode] = useState(true)
     const createChangeHandler = (index, property) => (newValue) => {
         setCurrentTracksInfo(oldTracksInfo => {
@@ -120,11 +121,36 @@ export const PredictionTable = ({ currentTracksInfo, setCurrentTracksInfo }) => 
             return newTracksInfo
         })
     }
+
+    const handleClick = (e, index, selected) => {
+        if (!selected){
+            setSelected(oldSelected => {
+                const newSelected = oldSelected.map((select,i) => {
+                    if (i==index) return !select;
+                    else return false;
+                })
+                return newSelected
+            })
+            console.log(selected)
+        }
+    }
+
     const tableHeadings = properties.map(property => <TableCell>{property}</TableCell>)
-    const tableRows = currentTracksInfo.map((trackInfo,index) => <PredictionRow trackInfo={trackInfo} key={index} index={index} createHandler={createChangeHandler} editMode={editMode}/>)
+    const tableRows = currentTracksInfo.map((trackInfo,index) => 
+    <PredictionRow 
+        trackInfo={trackInfo} 
+        key={index} 
+        index={index} 
+        createHandler={createChangeHandler} 
+        editMode={editMode} 
+        selected={selected[index]}
+        handleClick={handleClick}/>)
     // alert(JSON.stringify(tracksInfo,null,2))
     return <Table sx={{ minWidth: 650 }} aria-label="gosling bounding box prediction table">
-        <TableHead>{tableHeadings}</TableHead>
+        <TableHead>
+            <TableCell>ID</TableCell>
+            {tableHeadings}
+        </TableHead>
         <TableBody>{tableRows}</TableBody>
         {/* <Button hidden onClick={() => {
             setEditMode(oldValue => !oldValue)

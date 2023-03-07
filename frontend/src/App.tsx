@@ -37,10 +37,14 @@ function AppStepper({ data, step, handleFile, showData }: { data: any, handleFil
   const [spec,setSpec] = useState(initialSpec)
   console.log(spec)
   const [currentTracksInfo, setCurrentTracksInfo] = useState(initialTracksInfo)
+  const initialSelected = new Array(currentTracksInfo.length).fill(false)
+  const [selected, setSelected] = useState(initialSelected)
+  console.log(selected)
   //const [confirmed, setConfirmed] = useState(false);
   useEffect(() => {
     setCurrentTracksInfo(initialTracksInfo)
     setSpec(initialSpec)
+    setSelected(initialSelected)
   },[data])
   if (!showData){
     return <UploadImageComponent handleFile={handleFile}/>
@@ -49,6 +53,7 @@ function AppStepper({ data, step, handleFile, showData }: { data: any, handleFil
     return <div>AutoGosling could not find the ground truth in the dataset</div>
   }
   const { tracks_info: tracksInfo, image, width, height} = data
+  
   const submitTable = async () =>{
     console.log("Submit table")
     const formObject = new FormData();
@@ -62,6 +67,7 @@ function AppStepper({ data, step, handleFile, showData }: { data: any, handleFil
     if (json["spec"] != null){
       setSpec(json["spec"])
     }
+    setSelected(initialSelected)
   }
 
   const addTrack = async () =>{
@@ -89,6 +95,7 @@ function AppStepper({ data, step, handleFile, showData }: { data: any, handleFil
     formObject.append("predict", "False")
     formObject.append("delete", "True")
     formObject.append("track_info", JSON.stringify(currentTracksInfo))
+    formObject.append("selected", JSON.stringify(selected))
     const response = await fetch(VIZ_BACKEND_URL, {
         method: "POST",
         body: formObject
@@ -104,15 +111,25 @@ function AppStepper({ data, step, handleFile, showData }: { data: any, handleFil
     }
   }
 
-  const reset = async () =>{
+  const reset = () =>{
     setSpec(initialSpec)
     setCurrentTracksInfo(initialTracksInfo)
   }
 
   const predictionComponent = (<div>
     <div className='gosling-container' id="goslingEditor">
-    <GoslingSketch image={image} tracksInfo={currentTracksInfo} width={width} height={height} />
-    <div style={{ margin: '0 0px', height: '70vh', overflow: "scroll"}}>
+    <div className='grid-item'>
+      <p>Original Image</p>
+      <GoslingSketch 
+        image={image} 
+        tracksInfo={currentTracksInfo} 
+        width={width} 
+        height={height} 
+        selected={selected} 
+        setSelected={setSelected} />
+    </div>
+    <div style={{ margin: '0 0px', overflow: "scroll"}} className='grid-item'>
+    <p>Autogosling Results</p>
         <GoslingComponent
             spec={spec}
             padding={0}
@@ -120,14 +137,20 @@ function AppStepper({ data, step, handleFile, showData }: { data: any, handleFil
         />
     </div>
     </div>
-    <PredictionTable currentTracksInfo={currentTracksInfo} setCurrentTracksInfo={setCurrentTracksInfo}></PredictionTable>
+    <PredictionTable currentTracksInfo={currentTracksInfo} setCurrentTracksInfo={setCurrentTracksInfo} selected={selected} setSelected={setSelected}></PredictionTable>
     <Button onClick={()=> addTrack()}> Add A New Track</Button>
     <Button onClick={()=> deleteLastTrack()}> Delete Last Track</Button>
     <Button onClick={()=> reset()}> Reset</Button>
     <Button onClick={() => submitTable()}>Confirm</Button>
     {/* {confirmed && <p>Changes have been saved!</p> } -->*/}
   </div>)
-  const editorComponent = !!data.spec ? <GoslingEditorPre spec={JSON.stringify(spec)} /> : <div>AutoGosling could not generate a spec file as there was nothing detected.</div>;
+  const editorComponent = !!data.spec ? <div>
+    <div>
+      <p>Original Image</p>
+    <GoslingSketch image={image} tracksInfo={currentTracksInfo} width={width} height={height} selected={selected} setSelected={setSelected} />
+    </div>
+    <GoslingEditorPre spec={JSON.stringify(spec)} />
+  </div> : <div>AutoGosling could not generate a spec file as there was nothing detected.</div>;
   // alert('hi')
   const componentArray = [<UploadImageComponent handleFile={handleFile}/>, predictionComponent, editorComponent]
   return componentArray[step]
@@ -169,17 +192,17 @@ function App() {
       <Box className="results" sx={{ width: '100%' }}>
         <Box sx={{ width: '100%' }}>
           <Stepper activeStep={activeStep}>
-            <Step key={0}>
+            <Step key={0} completed={false}>
               <Typography>
                 <StepLabel>Upload</StepLabel>
               </Typography>
             </Step>
-            <Step key={1}>
+            <Step key={1} completed={false}>
               <Typography>
                 <StepLabel>Detection</StepLabel>
               </Typography>
             </Step>
-            <Step key={2}>
+            <Step key={2} completed={false}>
               <Typography>
                 <StepLabel>Reconstruction</StepLabel>
               </Typography>

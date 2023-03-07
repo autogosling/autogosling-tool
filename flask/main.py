@@ -92,6 +92,10 @@ def viz_analysis():
     pil_image = Image.open(image)
     if not pil_image.mode == 'RGB':
         pil_image = pil_image.convert('RGB')
+    print(pil_image.size)
+    THUMBNAIL_SIZE = (600,600)
+    pil_image.thumbnail(THUMBNAIL_SIZE)
+    print(pil_image.size)
     shape_img, _, shape_info, prop_info = predict(pil_image)
     # labelled_true_image = get_true_labelled_image(pil_image,json_labels)
     # tracks_info = # Load actual info 
@@ -133,6 +137,7 @@ def viz_analysis():
     if len(tracks_info) > 0:
         tracks_info = list(map(clean_track_info, tracks_info))
         response["spec"] = construct_spec(tracks_info,"vertical")
+        print(response["spec"])
     response["tracks_info"]= tracks_info
     response["width"] = width
     response["height"] = height
