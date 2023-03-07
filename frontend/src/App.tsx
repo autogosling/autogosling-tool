@@ -12,6 +12,9 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
@@ -39,7 +42,8 @@ function AppStepper({ data, step, handleFile, showData }: { data: any, handleFil
   const [currentTracksInfo, setCurrentTracksInfo] = useState(initialTracksInfo)
   const initialSelected = new Array(currentTracksInfo.length).fill(false)
   const [selected, setSelected] = useState(initialSelected)
-  console.log(selected)
+  const [expanded, setExpanded] = useState(true);
+
   //const [confirmed, setConfirmed] = useState(false);
   useEffect(() => {
     setCurrentTracksInfo(initialTracksInfo)
@@ -116,6 +120,10 @@ function AppStepper({ data, step, handleFile, showData }: { data: any, handleFil
     setCurrentTracksInfo(initialTracksInfo)
   }
 
+  const handleExpanded = () => {
+    setExpanded(prev => !prev)
+  }
+
   const predictionComponent = (<div>
     <div className='gosling-container' id="goslingEditor">
     <div className='grid-item'>
@@ -146,8 +154,18 @@ function AppStepper({ data, step, handleFile, showData }: { data: any, handleFil
   </div>)
   const editorComponent = !!data.spec ? <div>
     <div>
-      <p>Original Image</p>
-    <img src={image} />
+      <Accordion expanded={expanded} onChange={handleExpanded}>
+        <AccordionSummary
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+          <Typography>Original Image</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <img src={image} />
+        </AccordionDetails>
+      </Accordion>
+    
     </div>
     <GoslingEditorPre spec={JSON.stringify(spec)} />
   </div> : <div>AutoGosling could not generate a spec file as there was nothing detected.</div>;

@@ -147,7 +147,7 @@ class GoslingEditorPre extends React.Component {
             {/* <div style={{ margin: '5px 10px' }}>
                 <span><b>You can interact with the visualization through zoom and pan, or modify it by changing the code above</b></span>
             </div> */}
-            <div style={{ margin: '0 40px', height: '95vh', overflow: "scroll"}}>
+            <div style={{ margin: '0 20px', height: '70vh', overflow: "scroll"}}>
                 <GoslingComponent
                     spec={this.state.spec}
                     padding={20}
@@ -156,7 +156,7 @@ class GoslingEditorPre extends React.Component {
             </div>
             <div className='codeContainer' style={{ position: "relative"}}>
                 <MonacoEditor
-                    height='95vh'
+                    height='70vh'
                     width='100%'
                     language='json'
                     value={this.state.code}
