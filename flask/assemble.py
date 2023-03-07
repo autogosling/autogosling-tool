@@ -56,6 +56,7 @@ def create_track(track_info):
     new_track["width"] = track_info["width"]
     new_track["height"] = track_info["height"]
     new_track["orientation"] = track_info["orientation"]
+    new_track["title"] = track_info["title"]
     new_track["tracks"] = []
 
     if len(track_info["mark"]) == 1:

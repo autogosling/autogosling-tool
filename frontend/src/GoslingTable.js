@@ -42,11 +42,11 @@ const EditableTableCell = ({value,handler,editMode,property}) => {
         handler(typeof value === 'string' ? value.split(','):value,);
     }
     if (!editMode){
-        return <TableCell>
+        return <TableCell width="10%">
             {value}
             </TableCell>
     } else if (singleSelectProperties.includes(property)){
-        return <TableCell>
+        return <TableCell width="10%">
             <FormControl fullWidth>
                 <InputLabel variant="standard" htmlFor="uncontrolled-native">
                 {property}
@@ -69,7 +69,7 @@ const EditableTableCell = ({value,handler,editMode,property}) => {
             </FormControl>
         </TableCell>
     } else if (multiSelectProperties.includes(property)){
-        return <TableCell>
+        return <TableCell width="10%">
             <FormControl fullWidth>
                 <InputLabel variant="standard" htmlFor="uncontrolled-native">
                 {property}
@@ -89,7 +89,7 @@ const EditableTableCell = ({value,handler,editMode,property}) => {
             </FormControl>
         </TableCell>
     } else {
-        return <TableCell>
+        return <TableCell width="10%">
             <TextField variant="outlined" value={value} size="small" onChange={handleChange}/>
         </TableCell>
             
@@ -98,7 +98,7 @@ const EditableTableCell = ({value,handler,editMode,property}) => {
 
 const PredictionRow = ({trackInfo,index,createHandler,editMode, selected, handleClick}) => {
     return <TableRow selected = {selected} onClick={e=>handleClick(e,index, selected)}>
-        <TableCell>{index+1}</TableCell>
+        <TableCell width="10%">{index+1}</TableCell>
         {properties.map(property => (
             <EditableTableCell editMode={editMode} handler={createHandler(index,property)} value={trackInfo[property]} property={property} />
         ))}

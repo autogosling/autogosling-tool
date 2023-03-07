@@ -33,7 +33,8 @@ import numpy as np
 
 
 cuda = True
-w = "./best.onnx"
+w = "/new_mem/manqing/archive/best_jan.onnx"
+# w = "./best.onnx"
 # w = "./best_backup.onnx"
 
 providers = ['CUDAExecutionProvider', 'CPUExecutionProvider'] if cuda else ['CPUExecutionProvider']

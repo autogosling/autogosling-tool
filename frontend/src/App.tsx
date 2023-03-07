@@ -90,7 +90,7 @@ function AppStepper({ data, step, handleFile, showData }: { data: any, handleFil
     }
   }
 
-  const deleteLastTrack = async () =>{
+  const deleteSelectedTrack = async () =>{
     const formObject = new FormData();
     formObject.append("predict", "False")
     formObject.append("delete", "True")
@@ -139,7 +139,7 @@ function AppStepper({ data, step, handleFile, showData }: { data: any, handleFil
     </div>
     <PredictionTable currentTracksInfo={currentTracksInfo} setCurrentTracksInfo={setCurrentTracksInfo} selected={selected} setSelected={setSelected}></PredictionTable>
     <Button onClick={()=> addTrack()}> Add A New Track</Button>
-    <Button onClick={()=> deleteLastTrack()}> Delete Last Track</Button>
+    <Button onClick={()=> deleteSelectedTrack()}> Delete Selected Track</Button>
     <Button onClick={()=> reset()}> Reset</Button>
     <Button onClick={() => submitTable()}>Confirm</Button>
     {/* {confirmed && <p>Changes have been saved!</p> } -->*/}
@@ -147,7 +147,7 @@ function AppStepper({ data, step, handleFile, showData }: { data: any, handleFil
   const editorComponent = !!data.spec ? <div>
     <div>
       <p>Original Image</p>
-    <GoslingSketch image={image} tracksInfo={currentTracksInfo} width={width} height={height} selected={selected} setSelected={setSelected} />
+    <img src={image} />
     </div>
     <GoslingEditorPre spec={JSON.stringify(spec)} />
   </div> : <div>AutoGosling could not generate a spec file as there was nothing detected.</div>;
@@ -187,7 +187,7 @@ function App() {
     <div className="App">
       <Typography>
         <h1 className="page-title">AutoGosling</h1>
-        <Button variant="outlined" onClick={() => setUseGround(prev => !prev)}>{useGround ? "Currently showing Ground Truth. Click to show predictions" : "Currently showing predictions. Click to show ground truth"}</Button>
+        {/* <Button variant="outlined" onClick={() => setUseGround(prev => !prev)}>{useGround ? "Currently showing Ground Truth. Click to show predictions" : "Currently showing predictions. Click to show ground truth"}</Button> */}
       </Typography>
       <Box className="results" sx={{ width: '100%' }}>
         <Box sx={{ width: '100%' }}>
@@ -204,7 +204,7 @@ function App() {
             </Step>
             <Step key={2} completed={false}>
               <Typography>
-                <StepLabel>Reconstruction</StepLabel>
+                <StepLabel>Customization</StepLabel>
               </Typography>
             </Step>
           </Stepper>

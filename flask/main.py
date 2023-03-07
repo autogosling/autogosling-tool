@@ -59,6 +59,10 @@ def true_viz_analysis():
         response["height"] = height
     return jsonify(response)
 
+
+def add_title(e):
+    e[1]["title"] = str(e[0]+1)
+    return e[1]
     
 @app.route('/viz_analysis',methods=["POST"])
 def viz_analysis():
@@ -73,19 +77,22 @@ def viz_analysis():
             return track
         print("Just update!")
         tracks_info = json.loads(request.form["track_info"])
-        print(tracks_info)
         tracks_info = list(map(format_tracks_info, tracks_info))
         tracks_info = list(map(clean_track_info, tracks_info))
-        print(tracks_info)
         response = {}
         if "append" in request.form.keys() and request.form["append"] == "True":
             tracks_info = add_track(tracks_info)
         elif "delete" in request.form.keys() and request.form["delete"] == "True":
-            tracks_info = remove_last_track(tracks_info)
-        
+            selected = json.loads(request.form["selected"])
+            if len(selected) > 0:
+                tracks_info = [tracks_info[i] for i in range(len(tracks_info)) if not selected[i]]
         response["tracks_info"]= tracks_info
         if len(tracks_info)>0:
-            response["spec"] = construct_spec(tracks_info,"vertical")        
+            with_title_tracks_info = list(map(add_title, enumerate(tracks_info)))
+            temp_spec = construct_spec(with_title_tracks_info,"vertical")
+            if "views" not in temp_spec:
+                temp_spec = {"views": [temp_spec]}
+            response["spec"] = temp_spec        
         return jsonify(response)
     image = request.files['image']
     # json_labels = json.load(request.files['json'])
@@ -93,7 +100,7 @@ def viz_analysis():
     if not pil_image.mode == 'RGB':
         pil_image = pil_image.convert('RGB')
     print(pil_image.size)
-    THUMBNAIL_SIZE = (600,600)
+    THUMBNAIL_SIZE = (500,600)
     pil_image.thumbnail(THUMBNAIL_SIZE)
     print(pil_image.size)
     shape_img, _, shape_info, prop_info = predict(pil_image)
@@ -136,8 +143,11 @@ def viz_analysis():
     # response["spec"]= spec
     if len(tracks_info) > 0:
         tracks_info = list(map(clean_track_info, tracks_info))
-        response["spec"] = construct_spec(tracks_info,"vertical")
-        print(response["spec"])
+        with_title_tracks_info = list(map(add_title, enumerate(tracks_info)))
+        temp_spec = construct_spec(with_title_tracks_info,"vertical")
+        if "views" not in temp_spec:
+            temp_spec = {"views": [temp_spec]}
+        response["spec"] = temp_spec 
     response["tracks_info"]= tracks_info
     response["width"] = width
     response["height"] = height
