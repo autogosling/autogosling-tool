@@ -15,6 +15,7 @@ import Typography from '@mui/material/Typography';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
+import TextField from '@mui/material/TextField';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
@@ -37,18 +38,20 @@ function AppStepper({ data, step, handleFile, showData }: { data: any, handleFil
   const initialTracksInfo = !!data ? data.tracks_info : []
   const initialSpec = !!data ? data.spec : []
   console.log(initialSpec)
-  const [spec,setSpec] = useState(initialSpec)
+  const [spec,setSpec] = useState(() => initialSpec)
   console.log(spec)
-  const [currentTracksInfo, setCurrentTracksInfo] = useState(initialTracksInfo)
+  const [currentTracksInfo, setCurrentTracksInfo] = useState(()=>initialTracksInfo)
   const initialSelected = new Array(currentTracksInfo.length).fill(false)
-  const [selected, setSelected] = useState(initialSelected)
+  const [selected, setSelected] = useState(() => initialSelected)
+  console.log(selected)
   const [expanded, setExpanded] = useState(true);
+  const [gostalkQuestion, setGostalkQuestion] = useState("")
 
   //const [confirmed, setConfirmed] = useState(false);
   useEffect(() => {
     setCurrentTracksInfo(initialTracksInfo)
     setSpec(initialSpec)
-    setSelected(initialSelected)
+    setSelected(() => initialSelected)
   },[data])
   if (!showData){
     return <UploadImageComponent handleFile={handleFile}/>
@@ -71,7 +74,7 @@ function AppStepper({ data, step, handleFile, showData }: { data: any, handleFil
     if (json["spec"] != null){
       setSpec(json["spec"])
     }
-    setSelected(initialSelected)
+    setSelected(() => initialSelected)
   }
 
   const addTrack = async () =>{
@@ -116,12 +119,34 @@ function AppStepper({ data, step, handleFile, showData }: { data: any, handleFil
   }
 
   const reset = () =>{
-    setSpec(initialSpec)
-    setCurrentTracksInfo(initialTracksInfo)
+    setSpec(() => initialSpec)
+    setCurrentTracksInfo(() => initialTracksInfo)
   }
 
   const handleExpanded = () => {
     setExpanded(prev => !prev)
+  }
+  const handleQuestionChange = (event: React.ChangeEvent<HTMLInputElement>) =>{
+    setGostalkQuestion(event.target.value)
+  }
+
+  const submitQuestion = async () => {
+    const formObject = new FormData();
+    formObject.append("predict", "False")
+    formObject.append("gostalk_question", gostalkQuestion)
+    formObject.append("spec", JSON.stringify(spec))
+    const response = await fetch(VIZ_BACKEND_URL, {
+      method: "POST",
+      body: formObject
+    })
+    const json = await response.json()
+    if (json["spec"] != null){
+      setSpec(json["spec"])
+    }
+    if (json["tracks_info"] != null){
+      setCurrentTracksInfo(json["tracks_info"])
+      console.log(currentTracksInfo)
+    }
   }
 
   const predictionComponent = (<div>
@@ -170,7 +195,42 @@ function AppStepper({ data, step, handleFile, showData }: { data: any, handleFil
     <GoslingEditorPre spec={JSON.stringify(spec)} />
   </div> : <div>AutoGosling could not generate a spec file as there was nothing detected.</div>;
   // alert('hi')
-  const componentArray = [<UploadImageComponent handleFile={handleFile}/>, predictionComponent, editorComponent]
+
+  const gostalkComponent = (
+    <div>
+    <div className='gosling-container'>
+    <div className='grid-item'>
+      <p>Original Image</p>
+      <GoslingSketch 
+        image={image} 
+        tracksInfo={currentTracksInfo} 
+        width={width} 
+        height={height} 
+        selected={selected} 
+        setSelected={setSelected} />
+    </div>
+    <div style={{ margin: '0 0px', overflow: "scroll"}} className='grid-item'>
+    <p>Autogosling Results</p>
+        <GoslingComponent
+            spec={spec}
+            padding={0}
+            className='gosling-component'
+        />
+    </div>
+    </div>
+    <div>
+      <TextField fullWidth 
+      id="outlined-basic" 
+      label="Question" 
+      variant="outlined" 
+      value={gostalkQuestion}
+      onChange={handleQuestionChange}/> </div>
+    <div>
+    <Button onClick={()=>submitQuestion()}>Submit</Button>
+    </div>
+    </div>
+  )
+  const componentArray = [<UploadImageComponent handleFile={handleFile}/>, predictionComponent, editorComponent, gostalkComponent]
   return componentArray[step]
 
 }
@@ -200,7 +260,7 @@ function App() {
   const handleNavigation = () => {
     setActiveStep((prevActiveStep) => Math.min(2,prevActiveStep+1));
   }
-  const MAX_STEPS = 2
+  const MAX_STEPS = 3
   return (
     <div className="App">
       <Typography>
@@ -223,6 +283,11 @@ function App() {
             <Step key={2} completed={false}>
               <Typography>
                 <StepLabel>Customization</StepLabel>
+              </Typography>
+            </Step>
+            <Step key={3} completed={false}>
+              <Typography>
+                <StepLabel>GosTalk</StepLabel>
               </Typography>
             </Step>
           </Stepper>

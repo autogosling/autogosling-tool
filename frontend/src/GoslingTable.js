@@ -124,7 +124,8 @@ export const PredictionTable = ({ currentTracksInfo, setCurrentTracksInfo, selec
 
     const handleClick = (e, index, selected) => {
         if (!selected){
-            setSelected(oldSelected => {
+            setSelected(oldSelected => 
+                {
                 const newSelected = oldSelected.map((select,i) => {
                     if (i==index) return !select;
                     else return false;

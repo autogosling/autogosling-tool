@@ -13,6 +13,7 @@ from io import BytesIO
 from assemble import construct_spec, clean_track_info, add_track, remove_last_track
 from finder import find_matching_files
 import numpy as np
+import gostalk
 
 app = Flask(__name__)
 CORS(app)
@@ -68,6 +69,15 @@ def add_title(e):
 def viz_analysis():
     if (request.form["predict"] == "True"):
         print("Needs prediction!")
+    elif ("gostalk_question" in request.form.keys()):
+        question = request.form["gostalk_question"]
+        print(question)
+        print(str(request.form["spec"]))
+        bot = gostalk.GosTalk_ChatGPT(template_chart=request.form["spec"])
+        answer = bot.ask(question)
+        response = {"spec": json.loads(answer[1]),
+                    "explain":answer[0]}
+        return jsonify(response)
     else:
         def format_tracks_info(track):
             for key, val in track.items():
