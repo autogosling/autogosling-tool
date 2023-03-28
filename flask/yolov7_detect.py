@@ -1,3 +1,6 @@
+'''
+yolov7_detect.py serves as a reference to implement yolov7_demo.py
+'''
 import cv2
 import PIL
 import time
