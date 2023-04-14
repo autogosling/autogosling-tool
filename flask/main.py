@@ -73,6 +73,8 @@ def viz_analysis():
             return track
         print("Just update!")
         tracks_info = json.loads(request.form["track_info"])
+        tracks_info = list(map(format_tracks_info, tracks_info))
+        tracks_info = list(map(clean_track_info, tracks_info))
         response = {}
         if len(tracks_info) > 0:
             print(tracks_info)
@@ -86,6 +88,8 @@ def viz_analysis():
     pil_image = Image.open(image)
     if not pil_image.mode == 'RGB':
         pil_image = pil_image.convert('RGB')
+    THUMBNAIL_SIZE = (600,600)
+    pil_image.thumbnail(THUMBNAIL_SIZE)
     shape_img, _, shape_info, prop_info = predict(pil_image)
     # labelled_true_image = get_true_labelled_image(pil_image,json_labels)
     # tracks_info = # Load actual info 

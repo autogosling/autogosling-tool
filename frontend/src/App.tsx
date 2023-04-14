@@ -72,7 +72,13 @@ function AppStepper({ data, step, handleFile, showData }: { data: any, handleFil
     <Button onClick={() => submitTable()}>Confirm</Button>
     {/* {confirmed && <p>Changes have been saved!</p> } -->*/}
   </div>)
-  const editorComponent = !!data.spec ? <GoslingEditorPre spec={JSON.stringify(spec)} /> : <div>AutoGosling could not generate a spec file as there was nothing detected.</div>;
+  const editorComponent = !!data.spec ? <div>
+    {/* <div>
+      <p>Original Image</p>
+    <GoslingSketch image={image} tracksInfo={currentTracksInfo} width={width} height={height} selected={selected} setSelected={setSelected} />
+    </div> */}
+    <GoslingEditorPre spec={JSON.stringify(spec)} />
+  </div> : <div>AutoGosling could not generate a spec file as there was nothing detected.</div>;
   // alert('hi')
   const componentArray = [<UploadImageComponent handleFile={handleFile}/>, predictionComponent, editorComponent]
   return componentArray[step]
