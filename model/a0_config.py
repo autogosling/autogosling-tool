@@ -5,7 +5,7 @@ TEST_SIZE = 0.2
 VALID_SIZE = 0.1 # 10% of the training set
 
 np.random.seed(SEED)
-ABS_DIR = "/home/ec2-user/data/extracted-2.1"
+ABS_DIR = "/new_mem/data/extracted-3"
 aws_split_config = {
     "image_folder" : pjoin(ABS_DIR,"screenshot"),
     "bbox_folder" : pjoin(ABS_DIR,"bounding_box"),

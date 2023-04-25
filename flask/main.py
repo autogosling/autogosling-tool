@@ -110,9 +110,9 @@ def viz_analysis():
     if not pil_image.mode == 'RGB':
         pil_image = pil_image.convert('RGB')
     print(pil_image.size)
-    THUMBNAIL_SIZE = (500,600)
+    THUMBNAIL_SIZE = (640,640)
     pil_image.thumbnail(THUMBNAIL_SIZE)
-    print(pil_image.size)
+    # print(pil_image.size)
     shape_img, _, shape_info, prop_info = predict(pil_image)
     # labelled_true_image = get_true_labelled_image(pil_image,json_labels)
     # tracks_info = # Load actual info 
@@ -124,6 +124,7 @@ def viz_analysis():
         {'x': 0, 'y': 890, 'width': 800, 'height': 210, 'layout': 'linear', 'mark': 'area'}, 
         {'x': 0, 'y': 1100, 'width': 800, 'height': 210, 'layout': 'linear', 'mark': 'line'}]
     '''
+    #print(shape_info)
     shape_info_parsed = select_best_from_identical_boxes([parse_list(my_list) for my_list in shape_info])
     prop_info_parsed = merge_identical_boxes([parse_list(my_list) for my_list in prop_info])
 

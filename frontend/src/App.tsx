@@ -5,7 +5,6 @@ import './App.css';
 import { GoslingEditorPre, DEFAULT_SPEC,stripJsonComments } from './GoslingEditorPre';
 import {GoslingComponent} from "gosling.js";
 import GoslingSketch from "./GoslingSketch"
-import { GoslingModification } from './GoslingModification';
 import { EX_SPEC_BASIC_SEMANTIC_ZOOM } from "./default_specs";
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';

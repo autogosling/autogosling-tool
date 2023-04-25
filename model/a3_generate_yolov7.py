@@ -63,7 +63,11 @@ def load_mapping(mapping_fn="data/class_mapping.json"):
     with open(mapping_fn,"r") as f:
         return json.load(f)
 
-CLASS_MAPPING = load_mapping()
+def to_indices(mylist):
+    return {el:i for i,el in enumerate(mylist)}
+CLASS_MAPPING = to_indices(["area", "bar", "betweenLink", "circular", "heatmap", "horizontal", "ideogram", "line", "linear", "point", "rect", "rule", "text", "triangleLeft", "triangleRight", "vertical", "withinLink"])
+
+# CLASS_MAPPING = load_mapping()
 def make_folders_if_not_exist(folder_path):
     if not os.path.isdir(folder_path):
         os.makedirs(folder_path)
@@ -107,8 +111,17 @@ def convert_txt(json_path,classes, full_w,full_h):
         h /= full_h
 
         rest_data = ' '.join([str(el) for el in [cx,cy,w,h]])
-        return [f"{ind} {rest_data}" for ind in current_classes if ind != -1]
+        def encode_numerical(multihot):
+            orig_num = 0
+            for el in multihot:
+                orig_num += 1 << el
+            return orig_num
 
+        def clean_dump(object):
+            return int(4* encode_numerical(object[0]) + 2 * object[1] + 1 * object[2]) # Storing labels (e.g., mark 14, ) in the following format
+        print(current_classes)
+        return list({f"{i} {rest_data}" for i in current_classes})
+    print(classes)
     nested_lists = filter(lambda el: el is not None,[parse_item(item,current_classes) for item,current_classes in zip(data,classes)])
     flattened_set = set([el for sublist in nested_lists for el in sublist])
     content = '\n'.join(flattened_set)
@@ -136,12 +149,20 @@ def read_classes(stem_path,split_folder,mode):
         with open(complete_path,"r") as f:
             classes = json.load(f)
         return classes
+    
+    def convert_mapping(els,name):
+        if type(els) == list:
+            return [CLASS_MAPPING[class_el] for class_el in els]
+        else:
+            return CLASS_MAPPING[els] # just a single element
 
-    def convert_list(class_list):
-        return [CLASS_MAPPING[class_el] for class_el in flatten_list(class_list)]
+    def convert_dict(class_list):
+        return list(flatten_list([convert_mapping(subclass_list,name) for name, subclass_list in zip(CLASS_FOLDER_NAMES,class_list)]))
+        # return [CLASS_MAPPING[class_el] for class_el in flatten_list(class_list)]
     
     all_classes = [gather_classes_json(folder) for folder in CLASS_FOLDER_NAMES]
-    return [convert_list(class_list) for class_list in zip(*all_classes)] 
+    result =  [convert_dict(class_list) for class_list in zip(*all_classes)] 
+    return result
     
         
 

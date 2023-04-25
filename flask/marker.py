@@ -116,7 +116,10 @@ DEFAULT_TRACK = {
     "xe": {"field": "end", "type": "genomic"},
     "y": {"field": "peak", "type": "quantitative", "axis": "right"},
     "row": {"field": "sample", "type": "nominal"},
-    "size": {"value": 5}
+    "size": {"value": 5},
+    "color":{"value": "#eb4034"},
+    "opacity":{"value":1},
+    "style": {"outlineWidth":1},
 }
 
 DEFAULT_TRACK_1D = {
@@ -136,6 +139,10 @@ DEFAULT_TRACK_1D = {
     },
     "xe": {"field": "chromEnd", "type": "genomic"},
     "size": {"value": 20},
+    "color":{"value": "#eb4034"},
+    "size": {"value":3},
+    "opacity":{"value":1},
+    "style": {"outlineWidth":1},
 }
 
 DEFAULT_TRACK_HEATMAP = {
@@ -189,3 +196,6 @@ def get_default_subtrack(name):
         return copy.deepcopy(DEFAULT_SUBTRACK_1D_RULE)
     elif name == "rect":
         return copy.deepcopy(DEFAULT_SUBTRACK_1D_RECT)
+    elif name == "ideogram":
+        return copy.deepcopy(DEFAULT_SUBTRACK_1D_IDEOGRAM)
+

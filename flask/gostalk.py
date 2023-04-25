@@ -23,7 +23,7 @@ template_data = '''{
                 '''
 
 Chat_FineTune_Message = [
-                { 'role': 'system', 'content': "Hello, I'm Gosling. I'm a visualization tooltik for interactive genomic data." },
+                { 'role': 'system', 'content': "Hello, I'm Gosling. I'm a visualization toolkit for interactive genomic data." },
                 {"role": "system", 'content': 'I can help you write gosling specification json code'},
                 
                 # template data
@@ -43,13 +43,15 @@ Chat_FineTune_Message = [
                 )},
                 # multi view
                 {"role": "user", "content": (
-                    'the track number is in the title of the tracks'
-                )},
-                {"role": "user", "content": (
+                    'the track number is in the title of the tracks,'
+                    'do not change track titles,'
                     'if no track is specified, apply the change to all tracks'
                 )},
+                # grammar
                 {"role": "user", "content": (
-                    'do not change track titles'
+                    'to change the color of a track, update a hex value string in the value field of color,'
+                    'to change whether to include a bounding box, change the value of outlinewidth of style, 1 indicates to have a bounding box, 0 indicates to remove the bounding box.'
+                    'to add rows to a track, add values to categories under data field. we cannot add more tracks to heatmap.'
                 )},
                
             ]
