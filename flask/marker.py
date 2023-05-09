@@ -1,7 +1,7 @@
 import copy
 
 MARK_1D = ["rect", "triangleLeft", "triangleRight",
-           "rule", "betweenLink", "withinLink", "text"]
+           "rule", "betweenLink", "withinLink"]
 MARK_2D = ["rect", "bar", "point", "line", "area", "text"]
 
 DEFAULT_SUBTRACK_2D_BAR = {
@@ -49,55 +49,92 @@ DEFAULT_SUBTRACK_1D_RECT =  {
 
 
 DEFAULT_SUBTRACK_1D_IDEOGRAM = {
-    "mark": "rect",
-    "dataTransform": [
+          "alignment": "overlay",
+          "data": {
+            "url": "https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/cytogenetic_band.csv",
+            "type": "csv",
+            "chromosomeField": "Chr.",
+            "genomicFields": [
+              "ISCN_start",
+              "ISCN_stop",
+              "Basepair_start",
+              "Basepair_stop"
+            ]
+          },
+          "tracks": [
             {
-                "type": "filter",
-                "field": "Stain",
-                "oneOf": ["acen"],
-                "not": True
+              "mark": "rect",
+              "dataTransform": [
+                {
+                  "type": "filter",
+                  "field": "Stain",
+                  "oneOf": ["acen-1", "acen-2"],
+                  "not": True
+                }
+              ],
+              "color": {
+                "field": "Density",
+                "type": "nominal",
+                "domain": ["", "25", "50", "75", "100"],
+                "range": ["white", "#D9D9D9", "#979797", "#636363", "black"]
+              },
+              "size": {"value": 20}
+            },
+            {
+              "mark": "rect",
+              "dataTransform": [
+                {"type": "filter", "field": "Stain", "oneOf": ["gvar"]}
+              ],
+              "color": {"value": "#A0A0F2"},
+              "size": {"value": 20}
+            },
+            {
+              "mark": "triangleRight",
+              "dataTransform": [
+                {"type": "filter", "field": "Stain", "oneOf": ["acen-1"]}
+              ],
+              "color": {"value": "#B40101"},
+              "size": {"value": 20}
+            },
+            {
+              "mark": "triangleLeft",
+              "dataTransform": [
+                {"type": "filter", "field": "Stain", "oneOf": ["acen-2"]}
+              ],
+              "color": {"value": "#B40101"},
+              "size": {"value": 20}
             }
-    ],
-    "color": {
-        "field": "Stain",
-        "type": "nominal",
-        "domain": [
-                "gneg",
-                "gpos25",
-                "gpos50",
-                "gpos75",
-                "gpos100",
-                "gvar"
-        ],
-        "range": [
-            "white",
-            "#D9D9D9",
-            "#979797",
-            "#636363",
-            "black",
-            "#A0A0F2"
-        ]
-    }
-}
+          ],
+          "x": {"field": "Basepair_start", "type": "genomic", "axis": "none", "domain":{"interval":[100000000,300000000]}},
+          "xe": {"field": "Basepair_stop", "type": "genomic"},
+          "stroke": {"value": "black"},
+          "strokeWidth": {"value": 1},
+          "style": {"outlineWidth": 0},
+          "width": 200,
+          "height": 250
+        }
 
 
 DEFAULT_SUBTRACK_1D_TRIANGLERIGHT = {
-    "mark": "triangleRight",
-    "dataTransform": [
-        {"type": "filter", "field": "Stain", "oneOf": ["acen"]},
-        {"type": "filter", "field": "Name", "include": "q"}
-    ],
-    "color": {"value": "#B40101"}
-}
+            "dataTransform": [
+              {"type": "filter", "field": "type", "oneOf": ["gene"]},
+              {"type": "filter", "field": "strand", "oneOf": ["+"]}
+            ],
+            "mark": "triangleRight",
+            "x": {"field": "end", "type": "genomic", "axis": "none"},
+            "size": {"value": 15}
+          }
 
 DEFAULT_SUBTRACK_1D_TRIANGLELEFT = {
-    "mark": "triangleLeft",
-    "dataTransform": [
-        {"type": "filter", "field": "Stain", "oneOf": ["acen"]},
-        {"type": "filter", "field": "Name", "include": "p"}
-    ],
-    "color": {"value": "#B40101"}
-}
+            "dataTransform": [
+              {"type": "filter", "field": "type", "oneOf": ["gene"]},
+              {"type": "filter", "field": "strand", "oneOf": ["-"]}
+            ],
+            "mark": "triangleLeft",
+            "x": {"field": "start", "type": "genomic", "axis": "none"},
+            "size": {"value": 15},
+            "style": {"align": "right"}
+          }
 
 DEFAULT_TRACK = {
     "width": 800,
@@ -112,38 +149,43 @@ DEFAULT_TRACK = {
         "binSize": 5
     },
     "layout": "linear",
-    "x": {"field": "start", "type": "genomic", "axis": "bottom"},
+    "x": {"field": "start", "type": "genomic", "axis": "none"},
     "xe": {"field": "end", "type": "genomic"},
-    "y": {"field": "peak", "type": "quantitative", "axis": "right"},
+    "y": {"field": "peak", "type": "quantitative", "axis": "none"},
     "row": {"field": "sample", "type": "nominal"},
     "size": {"value": 5},
-    "color":{"value": "#eb4034"},
+    "color":{"range": ["#E79F00"],
+             "field":"sample",
+              "type": "nominal",},
     "opacity":{"value":1},
-    "style": {"outlineWidth":1},
+    "style": {"outlineWidth":0},
 }
 
 DEFAULT_TRACK_1D = {
-    "width": 800,
-    "height": 40,
-    "data": {
-        "url": "https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/UCSC.HG38.Human.CytoBandIdeogram.csv",
-        "type": "csv",
-        "chromosomeField": "Chromosome",
-        "genomicFields": ["chromStart", "chromEnd"]
-    },
-    "x": {
-        "field": "chromStart",
-        "type": "genomic",
-        "domain": {"chromosome": "chr1"},
-        "axis": "top"
-    },
-    "xe": {"field": "chromEnd", "type": "genomic"},
-    "size": {"value": 20},
-    "color":{"value": "#eb4034"},
-    "size": {"value":3},
-    "opacity":{"value":1},
-    "style": {"outlineWidth":1},
-}
+        "data": {
+          "url": "https://server.gosling-lang.org/api/v1/tileset_info/?d=gene-annotation",
+          "type": "beddb",
+          "genomicFields": [
+            {"index": 1, "name": "start"},
+            {"index": 2, "name": "end"}
+          ],
+          "valueFields": [
+            {"index": 5, "name": "strand", "type": "nominal"},
+            {"index": 3, "name": "name", "type": "nominal"}
+          ],
+          "exonIntervalFields": [
+            {"index": 12, "name": "start"},
+            {"index": 13, "name": "end"}
+          ]
+        },
+        "color": {
+          "value":"#7585FF"
+        },
+        "opacity": {"value": 1},
+        "width": 350,
+        "height": 100,
+        "style": {"outlineWidth":1}
+      }
 
 DEFAULT_TRACK_HEATMAP = {
     "data": {
@@ -171,6 +213,8 @@ def get_default_track(names):
     if len(names) == 1 and "heatmap" in names:
         return copy.deepcopy(DEFAULT_TRACK_HEATMAP)
     #print(names,[name in MARK_1D for name in names])
+    if "ideogram" in names:
+        return copy.deepcopy(DEFAULT_SUBTRACK_1D_IDEOGRAM)
     if all(name in MARK_1D for name in names):
         return copy.deepcopy(DEFAULT_TRACK_1D)
     else:
@@ -196,6 +240,5 @@ def get_default_subtrack(name):
         return copy.deepcopy(DEFAULT_SUBTRACK_1D_RULE)
     elif name == "rect":
         return copy.deepcopy(DEFAULT_SUBTRACK_1D_RECT)
-    elif name == "ideogram":
-        return copy.deepcopy(DEFAULT_SUBTRACK_1D_IDEOGRAM)
+
 

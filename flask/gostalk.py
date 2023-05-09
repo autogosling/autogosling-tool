@@ -27,14 +27,18 @@ Chat_FineTune_Message = [
                 {"role": "system", 'content': 'I can help you write gosling specification json code'},
                 
                 # template data
-                {"role": "user", "content": "please just draw one sample unless you are asked to draw multiple samples"},
+                {"role": "user", "content": (
+                    "please just draw one sample unless you are asked to draw multiple samples,"
+                    'always update the template spec if it is given'
+                    )
+                },
 
                 # teach the gosling grammar again
                 {"role": "user", "content": (
                     'do not miss tracks, ' 
                     'axis should be specified as string, '
                     'and one axis should be genomic, '
-                    'remember to specify the field name, '
+                    #'remember to specify the field name, '
                     'width and height should be specified for each track or view as number'
                 )},
 
@@ -45,14 +49,26 @@ Chat_FineTune_Message = [
                 {"role": "user", "content": (
                     'the track number is in the title of the tracks,'
                     'do not change track titles,'
+                    'do not leave tracks out unless you are told to do so.'
+                    'always update information from the original spec instead of building a new one.'
                     'if no track is specified, apply the change to all tracks'
                 )},
                 # grammar
                 {"role": "user", "content": (
-                    'to change the color of a track, update a hex value string in the value field of color,'
+                    'to change the color of a track, change the hex value string in the range field of color,'
+                    'the colors of rows correspond to the values in the range. to change colors of tracks, update the values in or change the order of color ranges.'
                     'to change whether to include a bounding box, change the value of outlinewidth of style, 1 indicates to have a bounding box, 0 indicates to remove the bounding box.'
-                    'to add rows to a track, add values to categories under data field. we cannot add more tracks to heatmap.'
+                    'to add rows to a track, add values to categories under data field. we cannot add more tracks to heatmap,'
                 )},
+                # mark
+                {"role": "user", "content":(
+                    'triangleLeft and triangleRight are both refered as triangle marks'
+                )},
+                # multi view
+                {"role": "user", "content":(
+                    'If some tracks are specified in one change, apply the following changes in the same instruction to all of them unless you are told otherwise.'
+                )}
+
                
             ]
 
@@ -62,7 +78,7 @@ class GosTalk_ChatGPT():
     def __init__(self, template_chart=None,prompt=Chat_FineTune_Message):
         self.prompt = prompt
         if template_chart:
-            self.prompt = self.prompt + [{"role": "user", "content": f'help me modify the Gosling Specification Code {template_chart}'}]
+            self.prompt = self.prompt + [{"role": "user", "content": f'help me update the Gosling Specification Code {template_chart}'}]
 
     def ask(self, new_question):
 

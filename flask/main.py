@@ -109,9 +109,11 @@ def viz_analysis():
     pil_image = Image.open(image)
     if not pil_image.mode == 'RGB':
         pil_image = pil_image.convert('RGB')
-    print(pil_image.size)
-    THUMBNAIL_SIZE = (640,640)
-    pil_image.thumbnail(THUMBNAIL_SIZE)
+    RESIZE_WIDTH = 600
+    RESIZE_HEIGHT = int(pil_image.size[1]*RESIZE_WIDTH/pil_image.size[0])
+    pil_image = pil_image.resize((RESIZE_WIDTH,RESIZE_HEIGHT))
+    #THUMBNAIL_SIZE = (640,640)
+    #pil_image.thumbnail(THUMBNAIL_SIZE)
     # print(pil_image.size)
     shape_img, _, shape_info, prop_info = predict(pil_image)
     # labelled_true_image = get_true_labelled_image(pil_image,json_labels)
@@ -126,7 +128,14 @@ def viz_analysis():
     '''
     #print(shape_info)
     shape_info_parsed = select_best_from_identical_boxes([parse_list(my_list) for my_list in shape_info])
+    #print("shape_info", shape_info)
+    #print("prop_info", prop_info)
+    #prop_info.extend(shape_info)
+
     prop_info_parsed = merge_identical_boxes([parse_list(my_list) for my_list in prop_info])
+    print("prop_info_parsed",prop_info_parsed)
+    print("shape_info_parsed",shape_info_parsed)
+
 
     def add_orientation(info):
         new_obj = info.copy()
@@ -137,6 +146,7 @@ def viz_analysis():
         new_obj['mark'] = [el for el in info['mark'] if el not in orientation_set]
         return new_obj
     raw_tracks_info = merge_parsed_list(shape_info_parsed,prop_info_parsed)
+    print("raw_tracks_info",raw_tracks_info)
     tracks_info = [add_orientation(info) for info in raw_tracks_info]
     tracks_info = [track_info for track_info in tracks_info if len(track_info['mark']) > 0]
     tracks_info = rank_tracks(tracks_info)
@@ -145,20 +155,20 @@ def viz_analysis():
 
     # '''
     images = {
-    #    "labelled_image" : labelled_true_image,
         "image" : shape_img,
-        # "property_image" : prop_img,
     }
     width, height = shape_img.size
     response = {key:pil2datauri(val) for key, val in images.items()}
     # response["spec"]= spec
     if len(tracks_info) > 0:
         tracks_info = list(map(clean_track_info, tracks_info))
+        tracks_info = sorted(tracks_info, key=lambda x: (x["y"],x["x"],))
         with_title_tracks_info = list(map(add_title, enumerate(tracks_info)))
         temp_spec = construct_spec(with_title_tracks_info,"vertical")
         if "views" not in temp_spec:
             temp_spec = {"views": [temp_spec]}
         response["spec"] = temp_spec 
+    #print(json.dumps(response["spec"], indent=2))
     response["tracks_info"]= tracks_info
     response["width"] = width
     response["height"] = height

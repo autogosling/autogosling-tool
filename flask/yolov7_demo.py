@@ -87,10 +87,14 @@ def predict(img):
 
   outname = [i.name for i in session.get_outputs()]
   inname = [i.name for i in session.get_inputs()]
+
   inp = {inname[0]:im}
   outputs = session.run(outname, inp)[0]
+
   scores = [el[-1] for el in outputs]
   bboxes = [el[1:5] for el in outputs]
+  #print(outputs)
+
   def make_image(class_set):
     important_info = []
     ori_images = [img.copy()]
@@ -108,6 +112,7 @@ def predict(img):
             name += ' '+str(score)
             new_x0, new_y0, new_x1, new_y1 = box
             important_info.append((classes[cls_id],new_x0,new_y0,new_x1,new_y1,cls_id,score))
+    #print(important_info)
     return Image.fromarray(ori_images[0]), important_info
   shape_image, shape_info = make_image(["linear","circular"])
   other_image, other_info = make_image([el for el in classes if el not in ['linear','circular']])

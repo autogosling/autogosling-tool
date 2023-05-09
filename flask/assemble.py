@@ -57,8 +57,14 @@ def create_track(track_info):
     new_track["height"] = track_info["height"]
     new_track["orientation"] = track_info["orientation"]
     new_track["title"] = track_info["title"]
-    new_track["tracks"] = []
+    new_track["spacing"] = 0
 
+    if "ideogram" in track_info["mark"]:
+        return new_track
+    elif "heatmap" in track_info["mark"]:
+        return new_track
+
+    new_track["tracks"] = []
     if len(track_info["mark"]) == 1:
         new_track["alignment"] = "overlay"
         new_sub_track = marker.get_default_subtrack(track_info["mark"][0])
@@ -66,6 +72,7 @@ def create_track(track_info):
             new_track["tracks"].append(new_sub_track)
     else:
         new_track["alignment"] = "overlay"
+        
         for m in track_info["mark"]:
             new_sub_track = marker.get_default_subtrack(m)
             if new_sub_track != None:
@@ -144,7 +151,7 @@ def construct_spec(track_infos, arrangement):
         curr_view = [y_sorted_infos[0]]
         for info in y_sorted_infos[1:]:
             new_y_low, new_y_high = get_bbox_ys(info)
-            if new_y_low >= curr_y_high-5:
+            if new_y_low >= curr_y_high-50:
                 all_views.append(curr_view)
                 curr_view = [info]
                 curr_y_high = new_y_high
@@ -164,7 +171,7 @@ def construct_spec(track_infos, arrangement):
         curr_view = [x_sorted_infos[0]]
         for info in x_sorted_infos[1:]:
             new_x_low, new_x_high = get_bbox_xs(info)
-            if new_x_low >= curr_x_high-5:
+            if new_x_low >= curr_x_high-50:
                 all_views.append(curr_view)
                 curr_view = [info]
                 curr_x_high = new_x_high
@@ -211,6 +218,7 @@ def add_track(tracks_info):
         "height": some_height,
         "layout": "linear",
         "orientation": "horizontal",
+        "spacing": 0,
         "mark": ["bar"]
     }
     tracks_info.append(new_track)
