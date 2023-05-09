@@ -13,7 +13,12 @@ const drawBoxes = (p5,tracksInfo, selected) => {
         if (selected[i]) p5.stroke(215, 0, 0);
         else p5.stroke(71,102,196);
         p5.strokeWeight(4)
-        const rect = p5.rect(x,y,width,height)
+        if (layout == "linear"){
+            const rect = p5.rect(x,y,width,height)
+        } else {
+            const rect = p5.rect(x,y,width,width)
+
+        }
         // const message = `Layout: ${layout}\nType: ${mark}\nOrientation: ${orientation}`
         // p5.noStroke()
         // p5.fill(225,245,244)
