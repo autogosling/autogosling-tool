@@ -1,67 +1,60 @@
-# AutoGosling: Automatic Interpretation and Generation of Genomic Visualizations using on Deep Learning
+# AutoGosling: Enabling Multimodal User Interactions for Genomics Visualization Creation
 
 AutoGosling consists of an end-to-end pipeline that automatically interprets genomic visualization images, extracts visual encoding and view layouts, and generates Gosling (http://gosling-lang.org) visualization specifications that can be used to create similar interactive visualization for users’ own data.
 
 This is the code repository for autogosling's webtool, consisting of the flask backend, frontend and model.
 
-## Dataset
-
-The script to generate the dataset to train the model is found [here](https://github.com/wangqianwen0418/gosling-boxes). The preprocessed dataset is available on [Harvard Dataverse](https://dataverse.harvard.edu/).
 
 ## Run Locally
 
-1. Clone the project
+1. Download the AutoGosling Python web-app [here](https://drive.google.com/file/d/1mAjrZMpZe2nAPcGiRd9KpguJvzWLKvGm/view?usp=share_link).
 
 ```bash
-  git clone https://github.com/autogosling/autogosling-tool
+  wget -O autogosling.tar.gz  https://drive.google.com/file/d/1mAjrZMpZe2nAPcGiRd9KpguJvzWLKvGm/view?usp=share_link
+  tar -xvf autogosling.tar.gz
 ```
 
 2. Go to the project directory
 
 ```bash
-  cd autogosling-tool
+  cd autogosling
 ```
 
 3. Create a conda environment
 
 ```bash
-  conda env create -f myenv.yml
+  conda create --name autogosling --file requirements.txt
   conda activate autogosling
 ```
-
-4. Run the app (see [Flask folder](https://github.com/autogosling/autogosling-tool/tree/main/flask) and [React folder](https://github.com/autogosling/autogosling-tool/tree/main/frontend) for details):
+4. Download AutoGosling Yolo v7 pre-trained weights [here](https://drive.google.com/file/d/1x_e4V9LDgjsZhMWCnONbiQXK4Zfw6t27/view?usp=share_link):
 
 ```bash
-  bash autogosling.sh
+  wget -O best.onnx https://drive.google.com/file/d/1x_e4V9LDgjsZhMWCnONbiQXK4Zfw6t27/view?usp=share_link
 ```
 
- **OR**
 
-  Start the flask server and React app separately
+4. Get a GPT API key [here](https://platform.openai.com/account/api-keys)
 
-  a) Start the flask server
-  ```bash
-    cd flask
-    python main.py
-  ```
+After getting the key, store in a .env file at project root directory.
 
-  b) Start the React app
-  ```bash
-    cd frontend
-    yarn start
-  ```
+```.env
+#.env
+OPENAI_API_KEY=<paste your key here>
+```
 
-  If working on a server, forward localhost:3000 to port 3000.
+5. Run the app:
 
-5. **Note**: if you add any packages to the conda environment: run (if you are on Mac or Linux)
 ```bash
-conda env export | grep -v "^prefix: " > myenv.yml
+  python main.py
 ```
-If you are on Windows, run 
-```bash
-conda env export -f myenv.yml
-```
-and manually remove the "prefix:" line
+
+The app automatically runs on port 7777.
+
+## Supplementary Files
+
+1. [Video Demo](https://drive.google.com/file/d/1x_e4V9LDgjsZhMWCnONbiQXK4Zfw6t27/view?usp=share_link)
+2. [AutoGosling Yolov7 Training Dataset Information](https://drive.google.com/file/d/1x_e4V9LDgjsZhMWCnONbiQXK4Zfw6t27/view?usp=share_link)
+3. [AutoGosling GPT-3.5 Finetuning Messages](https://drive.google.com/file/d/1x_e4V9LDgjsZhMWCnONbiQXK4Zfw6t27/view?usp=share_link)
 
 ## Team
 
