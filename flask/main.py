@@ -1,4 +1,5 @@
-from flask import Flask, request, Response, jsonify
+from flask import Flask, request, Response, jsonify, send_from_directory
+import os
 import itertools
 from flask_cors import CORS
 import numpy as np
@@ -15,15 +16,19 @@ from finder import find_matching_files
 import numpy as np
 import gostalk
 
-app = Flask(__name__)
+app = Flask(__name__,static_folder='build')
 CORS(app)
 
 def rank_tracks(tracks):
     return list(sorted(tracks,key=lambda el: (el['x'], el['y'])))
 
-@app.route('/',methods=["GET"])
-def main_route():
-    return "Hello! This is the main route."
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def main_route(path):
+    if path != "" and os.path.exists(app.static_folder + '/' + path):
+        return send_from_directory(app.static_folder, path)
+    else:
+        return send_from_directory(app.static_folder, 'index.html')
 
 def pil2datauri(img):
     #converts PIL image to datauri
@@ -32,13 +37,6 @@ def pil2datauri(img):
     data64 = base64.b64encode(data.getvalue())
     return u'data:img/jpeg;base64,'+data64.decode('utf-8')
 
-'''
-def perform_inference(pil_image):
-    # this is a placeholder code. it currently returns the width and height of the image, but it should later be adapted to return the appropriate specs.
-    width, height = pil_image.size
-    boxes, classes, scores, annotated_img = predict(pil_image)
-    return {"boxes" : boxes, "classes" : classes,"scores" : scores, "width" : width, "height" : height, "image" : pil2datauri(annotated_img)}
-'''
 
 @app.route('/true_viz_analysis',methods=["POST"])
 def true_viz_analysis():
@@ -71,8 +69,8 @@ def viz_analysis():
         print("Needs prediction!")
     elif ("gostalk_question" in request.form.keys()):
         question = request.form["gostalk_question"]
-        print(question)
-        print(str(request.form["spec"]))
+        # print(question)
+        # print(str(request.form["spec"]))
         bot = gostalk.GosTalk_ChatGPT(template_chart=request.form["spec"])
         answer = bot.ask(question)
         response = {"spec": json.loads(answer[1]),
@@ -133,8 +131,8 @@ def viz_analysis():
     #prop_info.extend(shape_info)
 
     prop_info_parsed = merge_identical_boxes([parse_list(my_list) for my_list in prop_info])
-    print("prop_info_parsed",prop_info_parsed)
-    print("shape_info_parsed",shape_info_parsed)
+    # print("prop_info_parsed",prop_info_parsed)
+    # print("shape_info_parsed",shape_info_parsed)
 
 
     def add_orientation(info):
@@ -146,12 +144,12 @@ def viz_analysis():
         new_obj['mark'] = [el for el in info['mark'] if el not in orientation_set]
         return new_obj
     raw_tracks_info = merge_parsed_list(shape_info_parsed,prop_info_parsed)
-    print("raw_tracks_info",raw_tracks_info)
+    #print("raw_tracks_info",raw_tracks_info)
     tracks_info = [add_orientation(info) for info in raw_tracks_info]
     tracks_info = [track_info for track_info in tracks_info if len(track_info['mark']) > 0]
     tracks_info = rank_tracks(tracks_info)
     # import ipdb; ipdb.set_trace()
-    print(tracks_info)
+    #print(tracks_info)
 
     # '''
     images = {
@@ -177,4 +175,4 @@ def viz_analysis():
 
 
 print("running app!")
-app.run(host="0.0.0.0",port=7777,debug=False)
+app.run(host="0.0.0.0",port=7777,debug=False, threaded=True)

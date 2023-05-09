@@ -33,9 +33,7 @@ import numpy as np
 
 
 cuda = True
-# w = "/new_mem/manqing/archive/best_jan.onnx"
-w = "/new_mem/katrina/autogosling-tool/yolov7/runs/train/yolov7_gosling_fixed_res9/weights/best.onnx"
-# w = "./best_backup.onnx"
+w = "best.onnx"
 
 providers = ['CUDAExecutionProvider', 'CPUExecutionProvider'] if cuda else ['CPUExecutionProvider']
 session = ort.InferenceSession(w, providers=providers)
