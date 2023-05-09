@@ -52,9 +52,9 @@ The app automatically runs on port 7777.
 
 ## Supplementary Files
 
-1. [Video Demo](https://drive.google.com/file/d/1x_e4V9LDgjsZhMWCnONbiQXK4Zfw6t27/view?usp=share_link)
-2. [AutoGosling Yolov7 Training Dataset Information](https://drive.google.com/file/d/1x_e4V9LDgjsZhMWCnONbiQXK4Zfw6t27/view?usp=share_link)
-3. [AutoGosling GPT-3.5 Finetuning Messages](https://drive.google.com/file/d/1x_e4V9LDgjsZhMWCnONbiQXK4Zfw6t27/view?usp=share_link)
+1. [Video Demo](https://drive.google.com/file/d/1KfC3IATrGmj8feMbF09oMJc6NXNQikOd/view?usp=share_link)
+2. [AutoGosling Yolov7 Training Dataset Information](https://docs.google.com/document/d/1Zd55MC6InFuckOTaCiU5Wsq8zo1G2UTcj8m-n2vY_VE/edit?usp=share_link)
+3. [AutoGosling GPT-3.5 Finetuning Messages](https://docs.google.com/document/d/1Eu0zP-56RxGRXsYn2OT19s9sg-2oeLckn68200RmaX0/edit?usp=share_link)
 
 ## Team
 
