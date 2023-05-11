@@ -25,7 +25,7 @@ This is the code repository for autogosling's webtool, consisting of the flask b
 
 3. Get a GPT API key [here](https://platform.openai.com/account/api-keys)
 
-After getting the key, store in a .env file at project root directory.
+After getting the key, store in a .env file at the flask directory.
 
 ```.env
 #.env
@@ -34,6 +34,7 @@ OPENAI_API_KEY=<paste your key here>
 
 4. Create a conda environment
 ```bash
+  cd ..
   conda create --name autogosling --file requirements.txt
   conda activate autogosling
 ```
