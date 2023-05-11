@@ -7,6 +7,47 @@ This is the code repository for autogosling's webtool, consisting of the flask b
 
 ## Run Locally
 
+### GitHub Repository
+
+1. Clone this repository
+
+```bash
+  git clone https://github.com/autogosling/autogosling-tool.git
+  cd autogosling-tool
+```
+
+2. Go to the flask folder and download AutoGosling Yolo v7 pre-trained weights [here](https://drive.google.com/file/d/1x_e4V9LDgjsZhMWCnONbiQXK4Zfw6t27/view?usp=share_link):
+
+```bash
+  cd flask
+  wget -O best.onnx https://drive.google.com/file/d/1x_e4V9LDgjsZhMWCnONbiQXK4Zfw6t27/view?usp=share_link
+```
+
+3. Get a GPT API key [here](https://platform.openai.com/account/api-keys)
+
+After getting the key, store in a .env file at project root directory.
+
+```.env
+#.env
+OPENAI_API_KEY=<paste your key here>
+```
+
+4. Create a conda environment
+```bash
+  conda create --name autogosling --file requirements.txt
+  conda activate autogosling
+```
+
+5. Start the app with script at project root
+
+```bash
+chmod 777 autogosling.sh
+./autogosling.sh
+```
+The front end of the app automatically runs on port 3000 with the backend on port 7777.
+
+### Python Web-App Tar
+
 1. Download the AutoGosling Python web-app [here](https://drive.google.com/file/d/1mAjrZMpZe2nAPcGiRd9KpguJvzWLKvGm/view?usp=share_link).
 
 ```bash
