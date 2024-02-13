@@ -13,9 +13,9 @@ This notebook generates a gradio app (https://www.gradio.app/) to test the finet
 This notebook is adapted from https://github.com/WongKinYiu/yolov7/blob/main/tools/YOLOv7onnx.ipynb.
 """
 import sys
-import torch
+# import torch
 print(f"Python version: {sys.version}, {sys.version_info} ")
-print(f"Pytorch version: {torch.__version__} ")
+# print(f"Pytorch version: {torch.__version__} ")
 
 # Inference for ONNX model
 import cv2
@@ -144,7 +144,7 @@ def draw_bounding_boxes(im: PIL.Image, bboxes: np.ndarray, classes: np.ndarray,
 #   bboxes, scores = predict(img)
 #   return draw_bounding_boxes(Image.fromarray(img),bboxes,classes,scores)
 
-import gradio as gr
-if __name__ == "__main__":
-    interface = gr.Interface(predict,inputs="image",outputs=["image","image"])
-    interface.launch(share=True,debug=True)
+# import gradio as gr
+# if __name__ == "__main__":
+#     interface = gr.Interface(predict,inputs="image",outputs=["image","image"])
+#     interface.launch(share=True,debug=True)
