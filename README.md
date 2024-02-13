@@ -25,7 +25,7 @@ This is the code repository for autogosling's webtool, consisting of the flask b
 
 3. Get a GPT API key [here](https://platform.openai.com/account/api-keys)
 
-After getting the key, store in a .env file at the flask directory.
+After getting the key, store in a .env file at the flask directory. If you don't have an OpenAI key, you can still run the app, you just won't have the NLP input features. 
 
 ```.env
 #.env
@@ -33,64 +33,39 @@ OPENAI_API_KEY=<paste your key here>
 ```
 
 4. Create a conda environment
+
+Installation has been tested with Python 3.12. 
 ```bash
   cd ..
-  conda create --name autogosling --file requirements.txt
+  conda env create --file environment.yaml
   conda activate autogosling
 ```
 
-5. Start the app with script at project root
+5. Go to the `frontend` directory and install the dependencies
+
+```bash
+  cd frontend
+  yarn
+```
+
+6. Start the app with script at project root
 
 ```bash
 chmod 777 autogosling.sh
 ./autogosling.sh
 ```
-The front end of the app automatically runs on port 3000 with the backend on port 7777.
+The front end of the app automatically runs on port 3000 with the backend on port 7777. 
+The first time you run the app, it will take a few minutes for it to start up. 
 
 ### Python Web-App Tar
 
-1. Download the AutoGosling Python web-app [here](https://drive.google.com/file/d/1mAjrZMpZe2nAPcGiRd9KpguJvzWLKvGm/view?usp=share_link).
+If you don't want to clone the github repository, you can also download a tar file of the python web-app instead [here](https://drive.google.com/file/d/1mAjrZMpZe2nAPcGiRd9KpguJvzWLKvGm/view?usp=share_link).
 
 ```bash
   wget -O autogosling.tar.gz  https://drive.google.com/file/d/1mAjrZMpZe2nAPcGiRd9KpguJvzWLKvGm/view?usp=share_link
   tar -xvf autogosling.tar.gz
 ```
 
-2. Go to the project directory
-
-```bash
-  cd autogosling
-```
-
-3. Create a conda environment
-
-```bash
-  conda create --name autogosling --file requirements.txt
-  conda activate autogosling
-```
-4. Download AutoGosling Yolo v7 pre-trained weights [here](https://drive.google.com/file/d/1x_e4V9LDgjsZhMWCnONbiQXK4Zfw6t27/view?usp=share_link):
-
-```bash
-  wget -O best.onnx https://drive.google.com/file/d/1x_e4V9LDgjsZhMWCnONbiQXK4Zfw6t27/view?usp=share_link
-```
-
-
-4. Get a GPT API key [here](https://platform.openai.com/account/api-keys)
-
-After getting the key, store in a .env file at project root directory.
-
-```.env
-#.env
-OPENAI_API_KEY=<paste your key here>
-```
-
-5. Run the app:
-
-```bash
-  python main.py
-```
-
-The app automatically runs on port 7777.
 
 ## Supplementary Files
 
